@@ -1,0 +1,27 @@
+INTRODUCTION
+=================================================================================
+
+This is the best introduction
+
+INIT
+=================================================================================
+
+    * First you should initiolize repositories: "$ ./laucher.sh init" in the
+      root folder.
+
+    * You can update repositories "$ ./laucher.sh update" or delete them
+      "$ ./laucher.sh delete"
+
+    * To build everything, just run "$ make"
+
+
+ARCHITECTURE FOLDER
+=================================================================================
+
+This section contain the description of each folder
+
+    * src: contain the sources of the projet
+    * bin: contain the binaries
+    * lib: contain the libraries
+    * repo: is the place for all additional repositories
+    * www: is used to put every web interface useful things
