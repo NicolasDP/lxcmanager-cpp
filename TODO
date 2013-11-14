@@ -1,0 +1,6 @@
+Makefile:
+ * Need to handler repo:
+   * build
+   * install in ./lib
+   * link the libraries
+   * expose the include path
