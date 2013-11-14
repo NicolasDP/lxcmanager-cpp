@@ -12,7 +12,7 @@ PROJECTVERSION = 0
 PROJECTSUBVERSION = 1
 PROJECTREVISION = 0
 
-PACKAGES_NEEDED=g++
+PACKAGES_NEEDED=g++ git subversion cmake
 
 # The installation directory
 INSTALLDIR = /usr/local
@@ -35,15 +35,17 @@ PROJECTDIR=${PWD}
 SOURCEDIR =$(PROJECTDIR)/src
 INCLUDEDIR=$(PROJECTDIR)/src/include
 SCRIPTSDIR=$(PROJECTDIR)/scripts
+LIBSDIR=$(PROJECTDIR)/lib
+REPOSDIR=$(PROJECTDIR)/repo
 
 CONFIG_HEADER_FILE=$(INCLUDEDIR)/config.hh
 
 CPPFLAGS  = -W -Wall -Wextra
 CPPFLAGS += -Werror
 CPPFLAGS += $(EXTRA_CFLAGS)
-CPPFLAGS += -I$(INCLUDEDIR)
+CPPFLAGS += -I$(INCLUDEDIR) -I$(LIBSDIR)/include
 
-LDFLAGS = $(EXTRA_LDFLAGS)
+LDFLAGS = -L$(LIBSDIR)/lib $(EXTRA_LDFLAGS)
 
 MAKEOPT  = --no-print-directory
 MAKEOPT += CPPFLAGS="$(CPPFLAGS)"
@@ -84,12 +86,19 @@ help:
 
 # BUILDING
 
-all: DEPENDANCES $(SOURCEDIR) $(CONFIG_HEADER_FILE)
+all: DEPENDANCES INIT $(SOURCEDIR) $(CONFIG_HEADER_FILE)
 	@make $(MAKEOPT) -C $(SOURCEDIR) all
 
 DEPENDANCES:
 	@for package in $(PACKAGES_NEEDED); do \
-	  $(call check_package,$${package}); done
+	  $(call check_package,$${package}) || exit 1; done
+
+INIT: $(REPOSDIR)
+	@if [ ! -f "$(PROJECTDIR)/.init" ]; then \
+	   PROJECTDIR=$(PROJECTDIR) \
+	     $(SCRIPTSDIR)/handle_library_dependancies.sh build \
+	     && touch $(PROJECTDIR)/.init ; \
+	 fi
 
 # RELEASING
 
@@ -116,6 +125,8 @@ clean: $(SOURCEDIR)
 	@make $(MAKEOPT) -C $(SOURCEDIR) $@
 
 distclean: clean
+	@$(SCRIPTSDIR)/handle_library_dependancies.sh delete
+	@$(call remove_file,$(PROJECTDIR)/.init)
 	@$(call remove_file,$(CONFIG_HEADER_FILE))
 	@$(call remove_file,$(TARBALL))
 
@@ -130,3 +141,5 @@ $(INCLUDEDIR):
 	@echo "No include directory at $(INCLUDEDIR)"
 $(SOURCEDIR):
 	@echo "No sources available at $(SOURCEDIR)"
+$(REPOSDIR):
+	@echo "No sources available at $(REPOSDIR)"

@@ -95,15 +95,30 @@ build_repository()
     update_repository ${REPO_NAME}
     RETURN_VALUE=${?}
 
-    if [ ${RETURN_VALUE} -eq 0 ]; then
-        make ${REPO_NAME}
+    if [ ${RETURN_VALUE} -eq 0 ] && [ -d ${REPOS_FOLDER}/${REPO_NAME} ]; then
+        cd ${REPOS_FOLDER}/${REPO_NAME}
+        case "${REPO_NAME}" in
+            websocket)
+                cmake -DCMAKE_INSTALL_PREFIX:PATH=${PROJECTDIR}/lib \
+                      -DWEBSOCKETPP_BOOST_LIBS:PATH=${PROJECTDIR}/lib/lib . && make install
+                RETURN_VALUE=${?}
+                ;;
+            boost)
+                ./bootstrap.sh --prefix=${PROJECTDIR}/lib && (./b2 || ./b2 install)
+                RETURN_VALUE=${?}
+                ;;
+            *)
+                RETURN_VALUE=1
+                ;;
+        esac
         RETURN_VALUE=${?}
+	cd -
     fi
 
     if [ ${RETURN_VALUE} -eq 0 ]; then
-        message_info "${REPO_NAME} sources updated"
+        message_info "${REPO_NAME} sources built"
     else
-        message_error "unable to update the ${REPO_NAME} sources"
+        message_error "unable to build the ${REPO_NAME} sources"
     fi
 
     return ${RETURN_VALUE}
