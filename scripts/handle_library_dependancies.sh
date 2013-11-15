@@ -15,6 +15,9 @@ fi
 REPOS_FOLDER=repo
 REPOS_LIST="boost websocket"
 
+BOOST_LIBRARIES="program_options"
+BOOST_OPTIONS="link=static threading=multi runtime-link=static"
+
 SCRIPT_NAME=`basename ${0}`
 
 EXIT_VALUE=1
@@ -106,8 +109,8 @@ build_repository()
                 ;;
             boost)
                 ./bootstrap.sh --prefix=${PROJECTDIR}/lib \
-                      --with-libraries=program_options \
-                      && ./b2 && ./b2 install
+                      --with-libraries=${BOOST_LIBRARIES} \
+                      && ./b2 ${BOOST_OPTIONS} install
                 RETURN_VALUE=${?}
                 ;;
             *)
