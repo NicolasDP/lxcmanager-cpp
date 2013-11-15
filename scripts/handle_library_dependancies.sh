@@ -61,7 +61,7 @@ update_repository()
     RETURN_VALUE=${?}
 
     if [ ${RETURN_VALUE} -eq 0 ] && [ -d ${REPOS_FOLDER}/${REPO_NAME} ]; then
-        cd ${REPOS_FOLDER}/${REPO_NAME}
+        cd ${REPOS_FOLDER}/${REPO_NAME} &> /dev/null
         case "${REPO_NAME}" in
             websocket)
                 git pull
@@ -75,7 +75,7 @@ update_repository()
                 RETURN_VALUE=1
                 ;;
         esac
-        cd -
+        cd - &> /dev/null
     fi
 
     if [ ${RETURN_VALUE} -eq 0 ]; then
@@ -96,15 +96,18 @@ build_repository()
     RETURN_VALUE=${?}
 
     if [ ${RETURN_VALUE} -eq 0 ] && [ -d ${REPOS_FOLDER}/${REPO_NAME} ]; then
-        cd ${REPOS_FOLDER}/${REPO_NAME}
+        cd ${REPOS_FOLDER}/${REPO_NAME} &> /dev/null
         case "${REPO_NAME}" in
             websocket)
                 cmake -DCMAKE_INSTALL_PREFIX:PATH=${PROJECTDIR}/lib \
-                      -DWEBSOCKETPP_BOOST_LIBS:PATH=${PROJECTDIR}/lib/lib . && make install
+                      -DWEBSOCKETPP_BOOST_LIBS:PATH=${PROJECTDIR}/lib/lib . \
+		      && make install
                 RETURN_VALUE=${?}
                 ;;
             boost)
-                ./bootstrap.sh --prefix=${PROJECTDIR}/lib && (./b2 || ./b2 install)
+                ./bootstrap.sh --prefix=${PROJECTDIR}/lib \
+                      --with-libraries=program_options \
+                      && ./b2 && ./b2 install
                 RETURN_VALUE=${?}
                 ;;
             *)
@@ -112,7 +115,7 @@ build_repository()
                 ;;
         esac
         RETURN_VALUE=${?}
-	cd -
+	cd - &> /dev/null
     fi
 
     if [ ${RETURN_VALUE} -eq 0 ]; then

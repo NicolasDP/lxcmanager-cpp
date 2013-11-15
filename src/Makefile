@@ -17,7 +17,7 @@ include $(SCRIPTSDIR)/Makefile.functions
 
 all: $(PROJECTNAME)
 
-%.o: %.c
+%.o: %.cc
 	@echo " CPP" $@
 	@g++ -c $(CPPFLAGS) $< -o $@
 	@g++ $(CPPFLAGS) -MM $< -MF $*.d
@@ -29,10 +29,12 @@ all: $(PROJECTNAME)
 
 $(PROJECTNAME): $(OBJS)
 	@echo " LD " $(notdir $@)
-	@g++ $(LDFLAGS) $(OBJS) -o $@
+	@g++ $(OBJS) -o $@ $(LDFLAGS)
 
 
 clean:
 	@for objs in $(OBJS); do \
+	  $(call remove_file,$${objs}) ; done
+	@for objs in $(DEPS); do \
 	  $(call remove_file,$${objs}) ; done
 

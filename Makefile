@@ -37,6 +37,7 @@ INCLUDEDIR=$(PROJECTDIR)/src/include
 SCRIPTSDIR=$(PROJECTDIR)/scripts
 LIBSDIR=$(PROJECTDIR)/lib
 REPOSDIR=$(PROJECTDIR)/repo
+BINDIR=$(PROJECTDIR)/bin
 
 CONFIG_HEADER_FILE=$(INCLUDEDIR)/config.hh
 
@@ -45,12 +46,17 @@ CPPFLAGS += -Werror
 CPPFLAGS += $(EXTRA_CFLAGS)
 CPPFLAGS += -I$(INCLUDEDIR) -I$(LIBSDIR)/include
 
-LDFLAGS = -L$(LIBSDIR)/lib $(EXTRA_LDFLAGS)
+LDFLAGS = $(EXTRA_LDFLAGS)
+# BOOST libraries
+#   TODO: If you want to add a specific boost library do not forget to update
+#   the handle_library_scripts.sh (in $(SCRIPTSDIR)) in order to build the
+#   required library
+LDFLAGS += -static -L$(LIBSDIR)/lib -lboost_program_options
 
 MAKEOPT  = --no-print-directory
 MAKEOPT += CPPFLAGS="$(CPPFLAGS)"
 MAKEOPT += LDFLAGS="$(LDFLAGS)"
-MAKEOPT += PROJECTNAME="$(PROJECTDIR)/$(PROJECTNAME)"
+MAKEOPT += PROJECTNAME="$(BINDIR)/$(PROJECTNAME)"
 MAKEOPT += CONFIG_HEADER_FILE="$(CONFIG_HEADER_FILE)"
 MAKEOPT += SCRIPTSDIR="$(SCRIPTSDIR)"
 
@@ -93,6 +99,12 @@ DEPENDANCES:
 	@for package in $(PACKAGES_NEEDED); do \
 	  $(call check_package,$${package}) || exit 1; done
 
+update:
+	@if [ -f "$(PROJECTDIR)/.init" ]; then \
+	   PROJECTDIR=$(PROJECTDIR) \
+	     $(SCRIPTSDIR)/handle_library_dependancies.sh build ; \
+	 fi
+
 INIT: $(REPOSDIR)
 	@if [ ! -f "$(PROJECTDIR)/.init" ]; then \
 	   PROJECTDIR=$(PROJECTDIR) \
@@ -104,7 +116,7 @@ INIT: $(REPOSDIR)
 
 install: all
 	@mkdir -p $(BININSTALLDIR) \
-	  && cp $(PROJECTNAME) $(BININSTALLDIR) \
+	  && cp $(BINDIR)/$(PROJECTNAME) $(BININSTALLDIR) \
 	  || (echo "ERROR: unable to install $(PROJECTNAME) in $(BININSTALLDIR)" && exit 1)
 
 	@mkdir -p $(INCLUDEINSTALLDIR) \
@@ -123,12 +135,14 @@ tar.bz2:
 
 clean: $(SOURCEDIR)
 	@make $(MAKEOPT) -C $(SOURCEDIR) $@
+	@$(call remove_file,$(BINDIR)/$(PROJECTNAME))
+	@$(call remove_file,$(CONFIG_HEADER_FILE))
 
 distclean: clean
 	@$(SCRIPTSDIR)/handle_library_dependancies.sh delete
 	@$(call remove_file,$(PROJECTDIR)/.init)
-	@$(call remove_file,$(CONFIG_HEADER_FILE))
 	@$(call remove_file,$(TARBALL))
+	@$(call clean_dir,$(LIBSDIR))
 
 # MISCS
 

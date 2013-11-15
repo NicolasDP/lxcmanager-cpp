@@ -5,10 +5,12 @@
 ## Login   <nicolas@di-prima.fr>
 ##
 ## Started on  Tue 03 Sep 2013 13:58:33 BST Nicolas DI PRIMA
-## Last update Sat 14 Sep 2013 14:16:49 BST Nicolas DI PRIMA
+## Last update Fri 15 Nov 2013 07:46:38 GMT Nicolas DI PRIMA
 #
 
 remove_file = if [ -f $(1) ]; then rm $(1); echo " RM " $(notdir $(1)); fi
+
+clean_dir = if [ -d $(1) ]; then rm -rf $(1)/*; echo " CLEAN " $(notdir $(1)); fi
 
 
 check_package = if [ `dpkg -l |grep $(1) |grep ii &> /dev/null && echo false || echo true` = "true" ] ; then echo "Missing package: $(1)"; fi
