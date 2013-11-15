@@ -97,7 +97,7 @@ all: DEPENDANCES INIT $(SOURCEDIR) $(CONFIG_HEADER_FILE)
 
 DEPENDANCES:
 	@for package in $(PACKAGES_NEEDED); do \
-	  $(call check_package,$${package}) || exit 1; done
+	  $(call check_package,$${package}) ; done
 
 update:
 	@if [ -f "$(PROJECTDIR)/.init" ]; then \

@@ -1,16 +1,10 @@
-#
-## Makefile.functions for Gabyni
-##
-## Made by Nicolas DI PRIMA
-## Login   <nicolas@di-prima.fr>
-##
-## Started on  Tue 03 Sep 2013 13:58:33 BST Nicolas DI PRIMA
-## Last update Fri 15 Nov 2013 07:46:38 GMT Nicolas DI PRIMA
-#
+# Makefile useful function
 
+# if the file $(1) is present and then removes it
 remove_file = if [ -f $(1) ]; then rm $(1); echo " RM " $(notdir $(1)); fi
 
+# if a directory $(1) is present and then removes it
 clean_dir = if [ -d $(1) ]; then rm -rf $(1)/*; echo " CLEAN " $(notdir $(1)); fi
 
-
-check_package = if [ `dpkg -l |grep $(1) |grep ii &> /dev/null && echo false || echo true` = "true" ] ; then echo "Missing package: $(1)"; fi
+# check if a package is installed else it failed with exit 1
+check_package = if [ `dpkg -l |grep $(1) |grep ii &> /dev/null && echo false || echo true` = "true" ] ; then echo "Missing package: $(1)"; exit 1; fi
