@@ -2,3 +2,11 @@
 make: *** [/home/nuts/Projects/Lxcmanager/src/include/config.hh] Error 2
 
 What is config.hh ??
+
+Makefile:
+ * Doxygen
+
+Sources:
+ * write documentation
+ * write a script (python or anything else to check the coding style)
+
