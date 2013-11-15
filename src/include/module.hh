@@ -13,36 +13,15 @@
  * You should have received a copy of the GNU General Public License
  * along with LXCManager.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include "modules.hh"
+#ifndef MODULE_HH_
+# define MODULE_HH_
 
-LXCMModules* LXCMModules::_modules = NULL;
+# include "options.hh"
 
-LXCMModules::LXCMModules ()
+class LXCMModule
 {
-	Options* opts = Options::getOptions ();
+	public:
+		virtual OptionsParseCode checkOptions (po::variables_map&) = 0;
+};
 
-	opts->addModule (this);
-	opts->addOption ("plugdir,p", po::value<std::string> (), "path to plugins directory");
-}
-
-LXCMModules* LXCMModules::getModules (void)
-{
-	if (NULL == LXCMModules::_modules)
-	{
-		LXCMModules::_modules = new LXCMModules ();
-	}
-
-	return LXCMModules::_modules;
-}
-
-OptionsParseCode LXCMModules::checkOptions (po::variables_map& vm)
-{
-	if (vm.count ("plugdir"))
-	{
-		std::cout << "Plugin directory is \""
-		          <<  vm["plugdir"].as<std::string> () << "\""
-		          <<  std::endl;
-	}
-
-	return ERR_NONE;
-}
+#endif /* !MODULE_HH_ */

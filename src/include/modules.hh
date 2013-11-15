@@ -19,7 +19,10 @@
 # include <map>
 # include <string>
 
-class LXCMModules
+# include "options.hh"
+# include "module.hh"
+
+class LXCMModules : public LXCMModule
 {
 	public:
 		~LXCMModules (void);
@@ -27,10 +30,11 @@ class LXCMModules
 		LXCMModules (void);
 
 	public:
-		static std::map<std::string, std::string>* getModules (void);
+		static LXCMModules* getModules (void);
+		OptionsParseCode checkOptions (po::variables_map&);
 
 	private:
-		static std::map<std::string, std::string> *_modules;
+		static LXCMModules* _modules;
 };
 
 #endif /* !MODULES_HH_ */
