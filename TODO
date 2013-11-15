@@ -1,1 +1,4 @@
+/bin/sh: 21: /home/nuts/Projects/Lxcmanager/scripts/create_config.sh: cannot create : Directory nonexistent
+make: *** [/home/nuts/Projects/Lxcmanager/src/include/config.hh] Error 2
 
+What is config.hh ??

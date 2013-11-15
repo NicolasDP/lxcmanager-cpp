@@ -1,6 +1,6 @@
 # Source files
 
-SOURCES = main.cc modules.cc
+SOURCES = main.cc modules.cc options.cc
 
 # DO NOT EDIT THE REMAINING FILE
 
@@ -35,3 +35,4 @@ $(PROJECTNAME): $(OBJS)
 clean:
 	@for objs in $(OBJS); do \
 	  $(call remove_file,$${objs}) ; done
+
