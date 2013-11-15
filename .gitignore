@@ -1,0 +1,10 @@
+.init
+
+config.hh
+
+*.d
+*.o
+
+bin
+lib
+repo
