@@ -14,14 +14,16 @@
  * along with LXCManager.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "config.hh"
-#include "modules.hh"
 #include "options.hh"
+#include "version.hh"
+#include "modules.hh"
 
 int main (int argc, char** argv)
 {
 	int ret;
 	OptionsParseCode optPC;
 	Options* opts = Options::getOptions ();
+	LXCMVersion::init ();
 	LXCMModules* modules = LXCMModules::getModules ();
 
 	optPC = opts->parseOptions (argc, argv);

@@ -1,6 +1,6 @@
 # Source files
 
-SOURCES = main.cc modules.cc options.cc
+SOURCES = main.cc modules.cc options.cc version.cc
 
 # DO NOT EDIT THE REMAINING FILE
 
