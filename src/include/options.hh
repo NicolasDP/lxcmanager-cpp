@@ -9,14 +9,13 @@ namespace po = boost::program_options;
 
 class Options
 {
-  public:
-    Options(int						argc,
-	    char**					argv);
-    ~Options();
+	public:
+		Options (int const argc, char const * const * argv);
+		~Options ();
 
-  private:
-    po::options_description				desc_;
-    po::variables_map					vm_;
+	private:
+		po::options_description * _desc;
+		po::variables_map *       _vm;
 };
 
 #endif /* !OPTIONS_HH_ */

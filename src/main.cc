@@ -15,9 +15,10 @@
 
 #include "config.hh"
 #include "modules.hh"
+#include "options.hh"
 
-int main ()
+int main (int argc, char** argv)
 {
-  LXCMModules::getModules ();
-  return 0;
+	Options opts (argc, argv);
+	return 0;
 }
