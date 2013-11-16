@@ -34,6 +34,8 @@ class Options : public LXCMModule
 		OptionsParseCode parseOptions (int const, char const* const*);
 		OptionsParseCode checkOptions (po::variables_map&);
 
+    // int getOptionLevel (std::string);
+
 	private:
 		Options ();
 		static Options* _singleton;

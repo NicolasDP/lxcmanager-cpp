@@ -86,6 +86,11 @@ OptionsParseCode Options::parseOptions (int const argc, char const* const* argv)
 		}
 	}
 
-
 	return ret;
 }
+
+
+// int Options::getOptionLevel (std::string opt)
+// {
+// 	return this->Options::_vm[opt]->as<int> ();
+// }
