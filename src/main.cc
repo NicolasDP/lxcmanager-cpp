@@ -23,7 +23,7 @@ int main (int argc, char** argv)
 {
 	int ret;
 	OptionsParseCode optPC;
-	Options* opts = Options::getOptions ();
+	LXCMOptions* opts = LXCMOptions::getOptions ();
 	LXCMLogger::init ();
 	LXCMVersion::init ();
 	LXCMModules::init ();

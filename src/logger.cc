@@ -17,7 +17,7 @@ static std::string const level_header[LXCMLogger::NUMBER_OF_LOG_LEVEL] =
 
 LXCMLogger::LXCMLogger () : _logOutput ()
 {
-	Options* opt = Options::getOptions ();
+	LXCMOptions* opt = LXCMOptions::getOptions ();
 
 	this->_maxLevel = LXCMLogger::ERROR;
 

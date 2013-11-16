@@ -4,7 +4,7 @@ LXCMVersion* LXCMVersion::_singleton = NULL;
 
 LXCMVersion::LXCMVersion ()
 {
-	Options* opts = Options::getOptions ();
+	LXCMOptions* opts = LXCMOptions::getOptions ();
 
 	opts->addModule (this);
 	opts->addOption ("version", "print version");

@@ -1,9 +1,9 @@
 #include "options.hh"
 #include "logger.hh"
 
-Options* Options::_singleton = NULL;
+LXCMOptions* LXCMOptions::_singleton = NULL;
 
-Options::Options ()
+LXCMOptions::LXCMOptions ()
 {
 	this->_desc = new po::options_description ("Generic options");
 	this->_vm = new po::variables_map ();
@@ -13,27 +13,27 @@ Options::Options ()
 	this->_desc->add_options ()
 	    ("help,h", "produce help message");
 
-	this->_moduleName = "LXCMOptions";
+	this->_moduleName = "LXCMLXCMOptions";
 }
 
-Options::~Options ()
+LXCMOptions::~LXCMOptions ()
 {
 	delete this->_desc;
 	delete this->_vm;
 }
 
-Options* Options::getOptions ()
+LXCMOptions* LXCMOptions::getOptions ()
 {
-	if (!Options::_singleton)
+	if (!LXCMOptions::_singleton)
 	{
-		Options::_singleton = new Options ();
-		Options::_singleton->addModule (Options::_singleton);
+		LXCMOptions::_singleton = new LXCMOptions ();
+		LXCMOptions::_singleton->addModule (LXCMOptions::_singleton);
 	}
 
-	return Options::_singleton;
+	return LXCMOptions::_singleton;
 }
 
-OptionsParseCode Options::checkOptions (po::variables_map& vm)
+OptionsParseCode LXCMOptions::checkOptions (po::variables_map& vm)
 {
 	if (vm.count ("help"))
 	{
@@ -44,7 +44,7 @@ OptionsParseCode Options::checkOptions (po::variables_map& vm)
 	return ERR_NONE;
 }
 
-void Options::addModule (LXCMModule* module)
+void LXCMOptions::addModule (LXCMModule* module)
 {
 	if (module)
 	{
@@ -52,17 +52,17 @@ void Options::addModule (LXCMModule* module)
 	}
 }
 
-void Options::addOption (char const* name, char const* desc)
+void LXCMOptions::addOption (char const* name, char const* desc)
 {
 	this->_desc->add_options () (name, desc);
 }
 
-void Options::addOption (char const* n, po::value_semantic const* v, char const* d)
+void LXCMOptions::addOption (char const* n, po::value_semantic const* v, char const* d)
 {
 	this->_desc->add_options () (n, v, d);
 }
 
-OptionsParseCode Options::parseOptions (int const argc, char const* const* argv)
+OptionsParseCode LXCMOptions::parseOptions (int const argc, char const* const* argv)
 {
 	std::deque<LXCMModule*>::iterator it;
 	std::deque<LXCMModule*>::iterator end;

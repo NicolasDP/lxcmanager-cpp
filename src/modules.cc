@@ -19,7 +19,7 @@ LXCMModules* LXCMModules::_modules = NULL;
 
 LXCMModules::LXCMModules ()
 {
-	Options* opts = Options::getOptions ();
+	LXCMOptions* opts = LXCMOptions::getOptions ();
 
 	opts->addModule (this);
 	opts->addOption ("plugdir,p", po::value<std::string> (), "path to plugins directory");
