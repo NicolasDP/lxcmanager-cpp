@@ -76,20 +76,15 @@ OptionsParseCode LXCMLogger::checkOptions (po::variables_map& vm)
 		filename = vm["log-file"].as<std::string> ();
 		std::cerr << "open (" << filename << ")" << std::endl;
 		/* Open the file */
-		/* TODO: manage error (throw something...) */
 		try
 		{
 			this->_logOutput.open (filename.c_str (),
 			               std::ofstream::out | std::ofstream::app);
-			if (LXCMLogger::_singleton->_logOutput.is_open ())
-				std::cerr << "file " << filename << " is open" << std::endl;
 
 		}
 		catch (std::exception& e)
 		{
-			std::cerr << e.what () << std::endl;
-			this->log (LXCMLogger::ERROR,
-			           e.what ());
+			this->log (LXCMLogger::ERROR, e.what ());
 		}
 	}
 
