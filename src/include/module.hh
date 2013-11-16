@@ -22,6 +22,13 @@ class LXCMModule
 {
 	public:
 		virtual OptionsParseCode checkOptions (po::variables_map&) = 0;
+		virtual std::string& moduleName ()
+		{
+			return this->_moduleName;
+		}
+
+	protected:
+		std::string _moduleName;
 };
 
 #endif /* !MODULE_HH_ */

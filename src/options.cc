@@ -1,4 +1,5 @@
 #include "options.hh"
+#include "logger.hh"
 
 Options* Options::_singleton = NULL;
 
@@ -10,7 +11,9 @@ Options::Options ()
 	this->_modules = new std::deque<LXCMModule*> ();
 
 	this->_desc->add_options ()
-            ("help,h", "produce help message");
+	    ("help,h", "produce help message");
+
+	this->_moduleName = "LXCMOptions";
 }
 
 Options::~Options ()
@@ -79,6 +82,7 @@ OptionsParseCode Options::parseOptions (int const argc, char const* const* argv)
 	end = this->_modules->end ();
 	for (it = this->_modules->begin (); it != end; it++)
 	{
+		LXCMLogger::log (LXCMLogger::INFO, (*it)->moduleName ());
 		ret = (*it)->checkOptions (*this->_vm);
 		if (ERR_NONE != ret)
 		{
@@ -89,8 +93,3 @@ OptionsParseCode Options::parseOptions (int const argc, char const* const* argv)
 	return ret;
 }
 
-
-// int Options::getOptionLevel (std::string opt)
-// {
-// 	return this->Options::_vm[opt]->as<int> ();
-// }

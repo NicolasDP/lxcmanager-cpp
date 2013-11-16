@@ -30,7 +30,7 @@ class LXCMModules : public LXCMModule
 		LXCMModules (void);
 
 	public:
-		static LXCMModules* getModules (void);
+		static LXCMModules* init (void);
 		OptionsParseCode checkOptions (po::variables_map&);
 
 	private:

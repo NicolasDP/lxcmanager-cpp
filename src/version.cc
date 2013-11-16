@@ -8,6 +8,8 @@ LXCMVersion::LXCMVersion ()
 
 	opts->addModule (this);
 	opts->addOption ("version", "print version");
+
+	this->_moduleName = "LXCMVersion";
 }
 
 LXCMVersion::~LXCMVersion ()
@@ -30,7 +32,8 @@ OptionsParseCode LXCMVersion::checkOptions (po::variables_map& vm)
 		std::cout << PROJECT_NAME << " version "
 		          << PROJECT_VERSION_STRING
 		          <<  std::endl;
+		return ERR_HELP;
 	}
 
-	return ERR_HELP;
+	return ERR_NONE;
 }

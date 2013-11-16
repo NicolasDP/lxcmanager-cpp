@@ -1,6 +1,11 @@
 # Source files
 
-SOURCES = main.cc modules.cc options.cc version.cc
+SOURCES = \
+    main.cc \
+    modules.cc \
+    options.cc \
+    version.cc \
+    logger.cc
 
 # DO NOT EDIT THE REMAINING FILE
 

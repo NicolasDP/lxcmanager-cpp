@@ -23,9 +23,11 @@ LXCMModules::LXCMModules ()
 
 	opts->addModule (this);
 	opts->addOption ("plugdir,p", po::value<std::string> (), "path to plugins directory");
+
+	this->_moduleName = "LXCMModules";
 }
 
-LXCMModules* LXCMModules::getModules (void)
+LXCMModules* LXCMModules::init (void)
 {
 	if (NULL == LXCMModules::_modules)
 	{

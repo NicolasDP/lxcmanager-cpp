@@ -1,34 +1,39 @@
 #ifndef LOGGER_HH_
 # define LOGGER_HH_
 
-# define NOTICE = 0
-# define ERROR = 1
-
-# include <iostream>
-# include <iomanip>
 # include <string>
+# include <fstream>
 
 # include "options.hh"
 
-class Logger : public LXCMModule
+class LXCMLogger : public LXCMModule
 {
-  public:
-    static Logger* getLogger ();
-    ~Logger ();
+	public:
+		typedef
+		enum
+		{
+			ERROR = 0,
+			INFO,
+			DEBUG,
 
-    void Log (std::string, int, int);
-    OptionsParseCode checkOptions (po::variables_map&);
+			NUMBER_OF_LOG_LEVEL /* NEVER USE IT or upper number */
+		}
+		level;
 
-  private:
-    Logger ();
-    static Logger* _singleton;
+	public:
+		static void init ();
+		~LXCMLogger ();
 
-  private:
-    void LogError (std::string, int);
-    void LogStandard (std::string, int);
+		static void log (level const, std::string const&);
+		OptionsParseCode checkOptions (po::variables_map&);
 
-  private:
-    static const int _maxLevel = 1;
+	private:
+		LXCMLogger ();
+		static LXCMLogger* _singleton;
+
+	private:
+		level _maxLevel;
+		std::ofstream _logOutput;
 };
 
 #endif /* !LOGGER_HH_ */

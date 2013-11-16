@@ -17,16 +17,20 @@
 #include "options.hh"
 #include "version.hh"
 #include "modules.hh"
+#include "logger.hh"
 
 int main (int argc, char** argv)
 {
 	int ret;
 	OptionsParseCode optPC;
 	Options* opts = Options::getOptions ();
+	LXCMLogger::init ();
 	LXCMVersion::init ();
-	LXCMModules* modules = LXCMModules::getModules ();
+	LXCMModules::init ();
 
 	optPC = opts->parseOptions (argc, argv);
+
+	LXCMLogger::log (LXCMLogger::INFO, "Program initialized");
 
 	switch (optPC)
 	{
@@ -42,7 +46,7 @@ int main (int argc, char** argv)
 		break;
 	}
 
-	modules = modules;
+	LXCMLogger::log (LXCMLogger::INFO, "Program terminated (TODO)");
 
 	return ret;
 }
