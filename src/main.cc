@@ -26,7 +26,7 @@ int main (int argc, char** argv)
 	LXCMOptions* opts = LXCMOptions::getOptions ();
 	LXCMLogger::init ();
 	LXCMVersion::init ();
-	LXCMModules::init ();
+	LXCMPlugModules::init ();
 
 	optPC = opts->parseOptions (argc, argv);
 

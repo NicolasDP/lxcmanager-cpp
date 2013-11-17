@@ -15,36 +15,35 @@
 
 #include "modules.hh"
 
-LXCMModules* LXCMModules::_modules = NULL;
+LXCMPlugModules* LXCMPlugModules::_modules = NULL;
 
-LXCMModules::LXCMModules ()
+LXCMPlugModules::LXCMPlugModules ()
 {
-	LXCMOptions* opts = LXCMOptions::getOptions ();
+  LXCMOptions* opts = LXCMOptions::getOptions ();
 
-	opts->addModule (this);
-	opts->addOption ("plugdir,p", po::value<std::string> (), "path to plugins directory");
+  opts->addModule (this);
+  opts->addOption ("plugdir,p", po::value<std::string> (),
+                   "path to plugins directory");
 
-	this->_moduleName = "LXCMModules";
+  this->_moduleName = "LXCMPlugModules";
 }
 
-LXCMModules* LXCMModules::init (void)
+void LXCMPlugModules::init (void)
 {
-	if (NULL == LXCMModules::_modules)
-	{
-		LXCMModules::_modules = new LXCMModules ();
-	}
-
-	return LXCMModules::_modules;
+  if (NULL == LXCMPlugModules::_modules)
+  {
+    LXCMPlugModules::_modules = new LXCMPlugModules ();
+  }
 }
 
-OptionsParseCode LXCMModules::checkOptions (po::variables_map& vm)
+OptionsParseCode LXCMPlugModules::checkOptions (po::variables_map& vm)
 {
-	if (vm.count ("plugdir"))
-	{
-		std::cout << "Plugin directory is \""
-		          <<  vm["plugdir"].as<std::string> () << "\""
-		          <<  std::endl;
-	}
+  if (vm.count ("plugdir"))
+  {
+    std::cout << "Plugin directory is \""
+              <<  vm["plugdir"].as<std::string> () << "\""
+              <<  std::endl;
+  }
 
-	return ERR_NONE;
+  return ERR_NONE;
 }
