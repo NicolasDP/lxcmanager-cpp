@@ -21,32 +21,32 @@
 
 int main (int argc, char** argv)
 {
-	int ret;
-	OptionsParseCode optPC;
-	LXCMOptions* opts = LXCMOptions::getOptions ();
-	LXCMLogger::init ();
-	LXCMVersion::init ();
-	LXCMPlugModules::init ();
+  int ret;
+  OptionsParseCode optPC;
+  LXCMOptions* opts = LXCMOptions::getOptions ();
+  LXCMLogger::init ();
+  LXCMVersion::init ();
+  LXCMPlugModules::init ();
 
-	optPC = opts->parseOptions (argc, argv);
+  optPC = opts->parseOptions (argc, argv);
 
-	LXCMLogger::log (LXCMLogger::INFO, "Program initialized");
+  LXCMLogger::log (LXCMLogger::INFO, "Program initialized");
 
-	switch (optPC)
-	{
-	case ERR_NONE:
-		ret = 0;
-		break;
-	case ERR_HELP:
-		ret = 0;
-		break;
-	case ERR_ERROR:
-	default:
-		ret = 1;
-		break;
-	}
+  switch (optPC)
+  {
+    case ERR_NONE:
+      ret = 0;
+      break;
+    case ERR_HELP:
+      ret = 0;
+      break;
+    case ERR_ERROR:
+    default:
+      ret = 1;
+      break;
+  }
 
-	LXCMLogger::log (LXCMLogger::INFO, "Program terminated (TODO)");
+  LXCMLogger::log (LXCMLogger::INFO, "Program terminated (TODO)");
 
-	return ret;
+  return ret;
 }
