@@ -19,36 +19,36 @@ LXCMVersion* LXCMVersion::_singleton = NULL;
 
 LXCMVersion::LXCMVersion ()
 {
-	LXCMOptions* opts = LXCMOptions::getOptions ();
+  LXCMOptions* opts = LXCMOptions::getOptions ();
 
-	opts->addModule (this);
-	opts->addOption ("version", "print version");
+  opts->addModule (this);
+  opts->addOption ("version", "print version");
 
-	this->_moduleName = "LXCMVersion";
+  this->_moduleName = "LXCMVersion";
 }
 
 LXCMVersion::~LXCMVersion ()
 {
-	LXCMVersion::_singleton = NULL;
+  LXCMVersion::_singleton = NULL;
 }
 
 void LXCMVersion::init ()
 {
-	if (!LXCMVersion::_singleton)
-	{
-		LXCMVersion::_singleton = new LXCMVersion ();
-	}
+  if (!LXCMVersion::_singleton)
+  {
+    LXCMVersion::_singleton = new LXCMVersion ();
+  }
 }
 
 OptionsParseCode LXCMVersion::checkOptions (po::variables_map& vm)
 {
-	if (vm.count ("version"))
-	{
-		std::cout << PROJECT_NAME << " version "
-		          << PROJECT_VERSION_STRING
-		          <<  std::endl;
-		return ERR_HELP;
-	}
+  if (vm.count ("version"))
+  {
+    std::cout << PROJECT_NAME << " version "
+      << PROJECT_VERSION_STRING
+      <<  std::endl;
+    return ERR_HELP;
+  }
 
-	return ERR_NONE;
+  return ERR_NONE;
 }

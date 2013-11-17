@@ -26,27 +26,27 @@
  * version information about the main program. */
 class LXCMVersion : public LXCMCoreModule
 {
-	public:
-		/*!
-		 * @brief init
-		 * As LXCMVersion is a singleton design pattern, this is the
-		 * main function to initialize the unique instance of this
-		 * Class. */
-		static void init ();
-		/*! @brief Destructor */
-		~LXCMVersion ();
+  public:
+    /*!
+     * @brief init
+     * As LXCMVersion is a singleton design pattern, this is the
+     * main function to initialize the unique instance of this
+     * Class. */
+    static void init ();
+    /*! @brief Destructor */
+    ~LXCMVersion ();
 
-		/*!
-		 * @brief checkOptions
-		 * it implements the virtual method defined in the
-		 * LXCMCoreModule. */
-		OptionsParseCode checkOptions (po::variables_map&);
+    /*!
+     * @brief checkOptions
+     * it implements the virtual method defined in the
+     * LXCMCoreModule. */
+    OptionsParseCode checkOptions (po::variables_map&);
 
-	private:
-		/*! @brief Constructor */
-		LXCMVersion ();
-		/*!< @brief the unique instance of this Class */
-		static LXCMVersion* _singleton;
+  private:
+    /*! @brief Constructor */
+    LXCMVersion ();
+    /*!< @brief the unique instance of this Class */
+    static LXCMVersion* _singleton;
 };
 
 #endif /* !LXCMVERSION_HH_ */
