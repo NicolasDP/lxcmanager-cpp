@@ -8,3 +8,5 @@ config.hh
 bin
 lib
 repo
+
+doc/html/

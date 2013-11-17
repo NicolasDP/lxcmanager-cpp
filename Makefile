@@ -12,7 +12,7 @@ PROJECTVERSION = 0
 PROJECTSUBVERSION = 1
 PROJECTREVISION = 0
 
-PACKAGES_NEEDED=g++ git subversion cmake
+PACKAGES_NEEDED=g++ git subversion cmake graphviz doxygen
 
 # The installation directory
 INSTALLDIR = /usr/local
@@ -38,6 +38,7 @@ SCRIPTSDIR=$(PROJECTDIR)/scripts
 LIBSDIR=$(PROJECTDIR)/lib
 REPOSDIR=$(PROJECTDIR)/repo
 BINDIR=$(PROJECTDIR)/bin
+DOCDIR=$(PROJECTDIR)/doc
 
 CONFIG_HEADER_FILE=$(INCLUDEDIR)/config.hh
 
@@ -55,6 +56,8 @@ LDFLAGS += -static -L$(LIBSDIR)/lib -lboost_program_options
 
 MAKEOPT  = --no-print-directory
 MAKEOPT += CPPFLAGS="$(CPPFLAGS)"
+MAKEOPT += PROJECTDIR="$(PROEJCTDIR)"
+MAKEOPT += DOCDIR="$(DOCDIR)"
 MAKEOPT += LDFLAGS="$(LDFLAGS)"
 MAKEOPT += PROJECTNAME="$(BINDIR)/$(PROJECTNAME)"
 MAKEOPT += CONFIG_HEADER_FILE="$(CONFIG_HEADER_FILE)"
@@ -72,6 +75,9 @@ help:
 	@echo ""
 	@echo "all:     build the project and release the result under"
 	@echo "         $(PROJECTDIR)/$(PROJECTNAME)"
+	@echo ""
+	@echo "doc:     generate the documentation of the source project in"
+	@echo "         $(DOCDIR)"
 	@echo ""
 	@echo " -RELEASING-"
 	@echo ""
@@ -112,6 +118,11 @@ INIT: $(REPOSDIR)
 	     && touch $(PROJECTDIR)/.init ; \
 	 fi
 
+# DOCUMENTATION
+.PHONY: doc
+doc:
+	@make $(MAKEOPT) -C $(DOCDIR) doc
+
 # RELEASING
 
 install: all
@@ -140,6 +151,7 @@ clean: $(SOURCEDIR)
 
 distclean: clean
 	@$(SCRIPTSDIR)/handle_library_dependancies.sh delete
+	@make $(MAKEOPT) -C $(DOCDIR) $@
 	@$(call remove_file,$(PROJECTDIR)/.init)
 	@$(call remove_file,$(TARBALL))
 	@$(call clean_dir,$(LIBSDIR))
