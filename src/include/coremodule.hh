@@ -18,8 +18,7 @@
 
 # include "module.hh"
 
-/*
- * @class LXCMCoreModule
+/*! @class LXCMCoreModule
  *
  * Most of the core part of this project should inherit from this class.
  * By implemented this methods you will be able to handle specific option for
@@ -28,43 +27,42 @@
  * A minimal son may be:
  * class CoreFoo : public LXCMCoreModule
  * {
- *      public:
- *          CoreFoo ()
- *          {
- *              LXCMOptions* opts = LXCMOption::getOptions ()
- *              opts->addModule (this);
- *              opts->addOption ("foo,f", "useless option");
- *              opts->addOption ("bar", po::value<int>, "useless too");
+ *   public:
+ *     CoreFoo ()
+ *     {
+ *       LXCMOptions* opts = LXCMOption::getOptions ()
+ *       opts->addModule (this);
+ *       opts->addOption ("foo,f", "useless option");
+ *       opts->addOption ("bar", po::value<int>, "useless too");
  *
- *              this->_moduleName = "My name is CoreFoo";
- *          };
+ *       this->_moduleName = "My name is CoreFoo";
+ *     };
  *
- *          ~CoreFoo () {};
- *          OptionParseCode checkOptions (po::variables_map& vm)
- *          {
- *               if (vm.count ("foo")) {
- *                   std::cout << "FOO" << std::endl;
- *               }
+ *     ~CoreFoo () {};
+ *     OptionParseCode checkOptions (po::variables_map& vm)
+ *     {
+ *       if (vm.count ("foo")) {
+ *         std::cout << "FOO" << std::endl;
+ *       }
  *
- *               if (vm.count ("bar"))
- *               {
- *                   std::cout << "BAR " << vm["bar"].as<int> () << std::endl;
- *               }
- *          };
+ *       if (vm.count ("bar"))
+ *       {
+ *         std::cout << "BAR " << vm["bar"].as<int> () << std::endl;
+ *       }
+ *     };
  * };
- */
+*/
 class LXCMCoreModule : public LXCMModule
 {
-	public:
-		/**
-		 * @brief virtual interface that son must implement
-		 * It is use to handle the options it sets
-		 * If there is no options to handle, then this function does
-		 * nothing but must be implemented.
-		 *
-		 * @param po::variables_map&: contains the list of options
-		 * given by the user (see libboost::program_options). */
-		virtual OptionsParseCode checkOptions (po::variables_map&) = 0;
+  public:
+    /*! @brief virtual interface that son must implement
+     * It is use to handle the options it sets
+     * If there is no options to handle, then this function does
+     * nothing but must be implemented.
+     *
+     * @param po::variables_map&: contains the list of options
+     * given by the user (see libboost::program_options). */
+    virtual OptionsParseCode checkOptions (po::variables_map&) = 0;
 };
 
 #endif /* !COREMODULE_HH_ */

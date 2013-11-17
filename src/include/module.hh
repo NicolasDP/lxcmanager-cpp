@@ -18,39 +18,38 @@
 
 # include "options.hh"
 
-/*
- * @class LXCMModule
+/*! @class LXCMModule
  *
  * Most of the part of this project should inherit from this class.
  *
  * A minimal son may be:
  * class Foo : public LXCMModule
  * {
- *      public:
- *          Foo ()
- *          {
- *              this->_moduleName = "My name is Foo";
- *          };
+ *   public:
+ *     Foo ()
+ *     {
+ *       this->_moduleName = "My name is Foo";
+ *     };
  *
- *          ~Foo () {};
+ *     ~Foo () {};
  * };
  */
 class LXCMModule
 {
-	public:
-		/** @brief The moduleName getter, it returns the name of the
-		 * current module. Useful for debug and information logs.
-		 *
-		 * @return it returns the name of the module (_moduleName) */
-		virtual std::string& moduleName ()
-		{
-			return this->_moduleName;
-		}
+  public:
+    /*! @brief The moduleName getter, it returns the name of the
+     * current module. Useful for debug and information logs.
+     *
+     * @return it returns the name of the module (_moduleName) */
+    virtual std::string& moduleName ()
+    {
+      return this->_moduleName;
+    }
 
-	protected:
-		/** Module name (all module must set this field - use for debug
-		 *  and information log). */
-		std::string _moduleName;
+  protected:
+    /*! @brief Module name (all module must set this field - use for debug
+     * and information log). */
+    std::string _moduleName;
 };
 
 #endif /* !MODULE_HH_ */
