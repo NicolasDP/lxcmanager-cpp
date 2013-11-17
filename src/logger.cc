@@ -128,3 +128,8 @@ void LXCMLogger::log (LXCMLogger::level const lvl, std::string const& message)
     }
   }
 }
+
+void __attribute__ ((constructor)) coremodule_init_logger (void)
+{
+  LXCMLogger::init ();
+}

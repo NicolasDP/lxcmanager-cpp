@@ -24,9 +24,6 @@ int main (int argc, char** argv)
   int ret;
   OptionsParseCode optPC;
   LXCMOptions* opts = LXCMOptions::getOptions ();
-  LXCMLogger::init ();
-  LXCMVersion::init ();
-  LXCMPlugModules::init ();
 
   optPC = opts->parseOptions (argc, argv);
 

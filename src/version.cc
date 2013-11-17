@@ -52,3 +52,8 @@ OptionsParseCode LXCMVersion::checkOptions (po::variables_map& vm)
 
   return ERR_NONE;
 }
+
+void __attribute__ ((constructor)) coremodule_init_version (void)
+{
+  LXCMVersion::init ();
+}
