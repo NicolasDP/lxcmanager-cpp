@@ -6,7 +6,7 @@
 
 # include "options.hh"
 
-class LXCMLogger : public LXCMModule
+class LXCMLogger : public LXCMCoreModule
 {
 	public:
 		typedef

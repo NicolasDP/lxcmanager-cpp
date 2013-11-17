@@ -20,9 +20,8 @@
 # include <string>
 
 # include "options.hh"
-# include "module.hh"
 
-class LXCMModules : public LXCMModule
+class LXCMModules : public LXCMCoreModule
 {
 	public:
 		~LXCMModules (void);

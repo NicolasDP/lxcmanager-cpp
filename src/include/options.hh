@@ -28,12 +28,12 @@ OptionsParseCode;
 
 /* This include should not come before because module.hh needs the definition
  * of the OptionParseCode and the namespace po defined too */
-# include "module.hh"
+# include "coremodule.hh"
 
 /*!
  * @class LXCMOptions
  * It's implement an options module */
-class LXCMOptions : public LXCMModule
+class LXCMOptions : public LXCMCoreModule
 {
 	public:
 		/*! @brief getOptions
@@ -50,7 +50,7 @@ class LXCMOptions : public LXCMModule
 		 *  be call for each registered LXCModule.
 		 *
 		 *  @param LXCModule*: the address of a LXCModule instance */
-		void addModule (LXCMModule*);
+		void addModule (LXCMCoreModule*);
 		/*! @brief addOption
 		 *  it adds an option in the boost::program_options
 		 *  description. This option doesn't expect an argement.
@@ -100,7 +100,7 @@ class LXCMOptions : public LXCMModule
 		po::variables_map*       _vm;
 
 		/*! @brief the instance of each registered LXCModule */
-		std::deque<LXCMModule*>* _modules;
+		std::deque<LXCMCoreModule*>* _modules;
 };
 
 #endif /* !LXCMOPTIONS_HH_ */

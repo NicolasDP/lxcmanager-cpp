@@ -4,7 +4,7 @@
 # include "options.hh"
 # include "config.hh"
 
-class LXCMVersion : public LXCMModule
+class LXCMVersion : public LXCMCoreModule
 {
 	public:
 		static void init ();

@@ -8,7 +8,7 @@ LXCMOptions::LXCMOptions ()
 	this->_desc = new po::options_description ("Generic options");
 	this->_vm = new po::variables_map ();
 
-	this->_modules = new std::deque<LXCMModule*> ();
+	this->_modules = new std::deque<LXCMCoreModule*> ();
 
 	this->_desc->add_options ()
 	    ("help,h", "produce help message");
@@ -44,7 +44,7 @@ OptionsParseCode LXCMOptions::checkOptions (po::variables_map& vm)
 	return ERR_NONE;
 }
 
-void LXCMOptions::addModule (LXCMModule* module)
+void LXCMOptions::addModule (LXCMCoreModule* module)
 {
 	if (module)
 	{
@@ -64,8 +64,8 @@ void LXCMOptions::addOption (char const* n, po::value_semantic const* v, char co
 
 OptionsParseCode LXCMOptions::parseOptions (int const argc, char const* const* argv)
 {
-	std::deque<LXCMModule*>::iterator it;
-	std::deque<LXCMModule*>::iterator end;
+	std::deque<LXCMCoreModule*>::iterator it;
+	std::deque<LXCMCoreModule*>::iterator end;
 	OptionsParseCode ret = ERR_NONE;
 
 	try
