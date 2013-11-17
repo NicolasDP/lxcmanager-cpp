@@ -151,7 +151,7 @@ clean: $(SOURCEDIR)
 
 distclean: clean
 	@$(SCRIPTSDIR)/handle_library_dependancies.sh delete
-	@make $(MAKEOPT) -C $(DOCDIR) $@
+	@make $(MAKEOPT) -C $(DOCDIR) clean
 	@$(call remove_file,$(PROJECTDIR)/.init)
 	@$(call remove_file,$(TARBALL))
 	@$(call clean_dir,$(LIBSDIR))
