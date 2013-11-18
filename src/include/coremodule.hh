@@ -21,7 +21,7 @@
 /*! @class LXCMCoreModule
  *
  * Most of the core part of this project should inherit from this class.
- * By implemented this methods you will be able to handle specific option for
+ * By implementint this methods you will be able to handle specific option for
  * your module.
  *
  * A minimal son may be:
