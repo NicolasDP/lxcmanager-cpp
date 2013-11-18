@@ -4,8 +4,8 @@ include $(SCRIPTSDIR)/Makefile.functions
 all: doc
 
 doc:
-	doxygen Doxyfile
+	doxygen $(DOXYFILE)
 
-clean:
-	rm -rf $(DOCDIR)/html
-
+distclean:
+	@$(call remove_file,$(DOXYFILE))
+	@$(call remove_dir,$(DOCDIR)/html)

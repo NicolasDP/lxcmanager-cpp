@@ -40,6 +40,7 @@ REPOSDIR=$(PROJECTDIR)/repo
 BINDIR=$(PROJECTDIR)/bin
 DOCDIR=$(PROJECTDIR)/doc
 
+DOXYFILE = $(DOCDIR)/Doxyfile
 CONFIG_HEADER_FILE=$(INCLUDEDIR)/config.hh
 
 CPPFLAGS  = -W -Wall -Wextra
@@ -62,10 +63,39 @@ MAKEOPT += LDFLAGS="$(LDFLAGS)"
 MAKEOPT += PROJECTNAME="$(BINDIR)/$(PROJECTNAME)"
 MAKEOPT += CONFIG_HEADER_FILE="$(CONFIG_HEADER_FILE)"
 MAKEOPT += SCRIPTSDIR="$(SCRIPTSDIR)"
+MAKEOPT += DOCDIR="$(DOCDIR)"
+MAKEOPT += DOXYFILE="$(DOXYFILE)"
 
 TARBALL= $(PROJECT_TARNAME).$(PROJECT_TARTYPE)
 
 include $(SCRIPTSDIR)/Makefile.functions
+
+# BUILDING
+
+all: DEPENDANCES INIT $(SOURCEDIR) $(CONFIG_HEADER_FILE)
+	@make $(MAKEOPT) -C $(SOURCEDIR) all
+
+build: doc all
+
+DEPENDANCES:
+	@for package in $(PACKAGES_NEEDED); do \
+	  $(call check_package,$${package}) ; done
+
+update:
+	@if [ -f "$(PROJECTDIR)/.init" ]; then \
+	   PROJECTDIR=$(PROJECTDIR) \
+	     $(SCRIPTSDIR)/handle_library_dependancies.sh build ; \
+	 fi
+
+$(DOXYFILE):
+	$(SCRIPTSDIR)/generate_doxyfile.sh $(SOURCEDIR) $(DOCDIR) $(DOXYFILE)
+
+INIT: $(REPOSDIR)
+	@if [ ! -f "$(PROJECTDIR)/.init" ]; then \
+	   PROJECTDIR=$(PROJECTDIR) \
+	     $(SCRIPTSDIR)/handle_library_dependancies.sh build \
+	     && touch $(PROJECTDIR)/.init ; \
+	 fi
 
 help:
 	@echo ""
@@ -73,8 +103,10 @@ help:
 	@echo ""
 	@echo " -BUILDING-"
 	@echo ""
-	@echo "all:     build the project and release the result under"
-	@echo "         $(PROJECTDIR)/$(PROJECTNAME)"
+	@echo "build:   generate compilation and documentation"
+	@echo ""
+	@echo "all:     compile the project and place the binary in"
+	@echo "         $(BINDIR)/$(PROJECTNAME)"
 	@echo ""
 	@echo "doc:     generate the documentation of the source project in"
 	@echo "         $(DOCDIR)"
@@ -96,31 +128,9 @@ help:
 	@echo "distclean: clean the project (target clean) and remove generated files"
 	@echo ""
 
-# BUILDING
-
-all: DEPENDANCES INIT $(SOURCEDIR) $(CONFIG_HEADER_FILE)
-	@make $(MAKEOPT) -C $(SOURCEDIR) all
-
-DEPENDANCES:
-	@for package in $(PACKAGES_NEEDED); do \
-	  $(call check_package,$${package}) ; done
-
-update:
-	@if [ -f "$(PROJECTDIR)/.init" ]; then \
-	   PROJECTDIR=$(PROJECTDIR) \
-	     $(SCRIPTSDIR)/handle_library_dependancies.sh build ; \
-	 fi
-
-INIT: $(REPOSDIR)
-	@if [ ! -f "$(PROJECTDIR)/.init" ]; then \
-	   PROJECTDIR=$(PROJECTDIR) \
-	     $(SCRIPTSDIR)/handle_library_dependancies.sh build \
-	     && touch $(PROJECTDIR)/.init ; \
-	 fi
-
 # DOCUMENTATION
 .PHONY: doc
-doc:
+doc: $(DOXYFILE) DEPENDANCES
 	@make $(MAKEOPT) -C $(DOCDIR) doc
 
 # RELEASING
@@ -144,14 +154,16 @@ tar.bz2:
 
 # CLEANING
 
+docclean:
+	@make $(MAKEOPT) -C $(DOCDIR) distclean
+
 clean: $(SOURCEDIR)
 	@make $(MAKEOPT) -C $(SOURCEDIR) $@
 	@$(call remove_file,$(BINDIR)/$(PROJECTNAME))
 	@$(call remove_file,$(CONFIG_HEADER_FILE))
 
-distclean: clean
+distclean: clean docclean
 	@$(SCRIPTSDIR)/handle_library_dependancies.sh delete
-	@make $(MAKEOPT) -C $(DOCDIR) clean
 	@$(call remove_file,$(PROJECTDIR)/.init)
 	@$(call remove_file,$(TARBALL))
 	@$(call clean_dir,$(LIBSDIR))
