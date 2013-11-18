@@ -25,6 +25,7 @@
  * your module.
  *
  * A minimal son may be:
+ * @code
  * class CoreFoo : public LXCMCoreModule
  * {
  *   public:
@@ -51,6 +52,7 @@
  *       }
  *     };
  * };
+* @endcode
 */
 class LXCMCoreModule : public LXCMModule
 {

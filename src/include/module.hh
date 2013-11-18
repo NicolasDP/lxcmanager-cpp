@@ -23,6 +23,7 @@
  * Most of the part of this project should inherit from this class.
  *
  * A minimal son may be:
+ * @code
  * class Foo : public LXCMModule
  * {
  *   public:
@@ -33,6 +34,7 @@
  *
  *     ~Foo () {};
  * };
+ * @endcode
  */
 class LXCMModule
 {
