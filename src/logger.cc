@@ -74,9 +74,13 @@ OptionsParseCode LXCMLogger::checkOptions (po::variables_map& vm)
     lvl = vm["log-level"].as<int> ();
     switch (lvl)
     {
-      case ERROR:
-      case INFO:
+      /* It's more logic to think like this:
+       * If we set DEBUG logs, we also enable INFO and ERROR logs
+       * But if we set ERROR logs, we jump directly to the ERROR case and
+       * don't enable the "higher logs" */
       case DEBUG:
+      case INFO:
+      case ERROR:
 	this->_maxLevel = (LXCMLogger::level) lvl;
 	break;
       case NUMBER_OF_LOG_LEVEL:
@@ -89,13 +93,11 @@ OptionsParseCode LXCMLogger::checkOptions (po::variables_map& vm)
   {
     std::string filename;
     filename = vm["log-file"].as<std::string> ();
-    std::cerr << "open (" << filename << ")" << std::endl;
     /* Open the file */
     try
     {
       this->_logOutput.open (filename.c_str (),
 			     std::ofstream::out | std::ofstream::app);
-
     }
     catch (std::exception& e)
     {
