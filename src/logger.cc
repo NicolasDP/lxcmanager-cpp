@@ -38,16 +38,16 @@ LXCMLogger::LXCMLogger () : _logOutput ()
 
   opt->addModule (this);
   opt->addOption ("log-level",
-		  po::value<int> (),
-		  "set log level mask:\n"
-		  "    0: Errors Only\n"
-		  "    1: Infos and Errors only\n"
-		  "    2: Debug, Infos and Errors");
+                  po::value<int> (),
+                  "set log level mask:\n"
+                  "    0: Errors Only\n"
+                  "    1: Infos and Errors only\n"
+                  "    2: Debug, Infos and Errors");
   opt->addOption ("log-file",
-		  po::value<std::string> (),
-		  "set log file to write all of the log messages. If "
-		  "not set, log messages are redirected to the error "
-		  "output");
+                  po::value<std::string> (),
+                  "set log file to write all of the log messages. If "
+                  "not set, log messages are redirected to the error "
+                  "output");
 
   this->_moduleName = "LXCMLXCMLogger";
 }
@@ -81,11 +81,12 @@ OptionsParseCode LXCMLogger::checkOptions (po::variables_map& vm)
       case DEBUG:
       case INFO:
       case ERROR:
-	this->_maxLevel = (LXCMLogger::level) lvl;
-	break;
+        this->_maxLevel = (LXCMLogger::level) lvl;
+        break;
       case NUMBER_OF_LOG_LEVEL:
       default:
-	return ERR_ERROR;
+        this->log (LXCMLogger::ERROR, "Log level not available");
+        return ERR_ERROR;
     }
   }
 
@@ -97,11 +98,12 @@ OptionsParseCode LXCMLogger::checkOptions (po::variables_map& vm)
     try
     {
       this->_logOutput.open (filename.c_str (),
-			     std::ofstream::out | std::ofstream::app);
+                             std::ofstream::out | std::ofstream::app);
     }
     catch (std::exception& e)
     {
       this->log (LXCMLogger::ERROR, e.what ());
+      return ERR_ERROR;
     }
   }
 
@@ -117,16 +119,15 @@ void LXCMLogger::log (LXCMLogger::level const lvl, std::string const& message)
       std::chrono::system_clock::time_point now = std::chrono::system_clock::now ();
       std::time_t tt = std::chrono::system_clock::to_time_t (now);
       LXCMLogger::_singleton->_logOutput
-	<< "[" << tt << "]"
-	<< "[" << PROJECT_NAME << "]"
-	<< "[" << level_header[lvl] << "] "
-	<< message << std::endl;
+        << "[" << tt << "]"
+        << "[" << PROJECT_NAME << "]"
+        << "[" << level_header[lvl] << "] "
+        << message << std::endl;
     }
     else
     {
-      std::clog
-	<< "[" << level_header[lvl] << "] "
-	<< message << std::endl;
+      std::clog << "[" << level_header[lvl] << "] "
+                << message << std::endl;
     }
   }
 }

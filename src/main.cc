@@ -39,6 +39,7 @@ int main (int argc, char** argv)
       break;
     case ERR_ERROR:
     default:
+      LXCMLogger::log (LXCMLogger::ERROR, "Bad option parameter");
       ret = 1;
       break;
   }
