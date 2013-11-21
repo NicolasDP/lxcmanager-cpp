@@ -19,6 +19,7 @@
 LXCMOptions* LXCMOptions::_singleton = NULL;
 
 LXCMOptions::LXCMOptions ()
+  : LXCMCoreModule ("LXCMOptions")
 {
   this->_desc = new po::options_description ("Generic options");
   this->_vm = new po::variables_map ();
@@ -27,8 +28,6 @@ LXCMOptions::LXCMOptions ()
 
   this->_desc->add_options ()
     ("help,h", "produce help message");
-
-  this->_moduleName = "LXCMLXCMOptions";
 }
 
 LXCMOptions::~LXCMOptions ()

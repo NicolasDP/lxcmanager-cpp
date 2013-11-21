@@ -18,14 +18,13 @@
 LXCMPlugModules* LXCMPlugModules::_modules = NULL;
 
 LXCMPlugModules::LXCMPlugModules ()
+  : LXCMCoreModule ("LXCMPlugModules")
 {
   LXCMOptions* opts = LXCMOptions::getOptions ();
 
   opts->addModule (this);
   opts->addOption ("plugdir,p", po::value<std::string> (),
                    "path to plugins directory");
-
-  this->_moduleName = "LXCMPlugModules";
 }
 
 void LXCMPlugModules::init (void)

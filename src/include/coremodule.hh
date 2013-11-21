@@ -65,6 +65,8 @@ class LXCMCoreModule : public LXCMModule
      * @param po::variables_map&: contains the list of options
      * given by the user (see libboost::program_options). */
     virtual OptionsParseCode checkOptions (po::variables_map&) = 0;
+
+    LXCMCoreModule (std::string string) : LXCMModule (string) { };
 };
 
 #endif /* !COREMODULE_HH_ */
