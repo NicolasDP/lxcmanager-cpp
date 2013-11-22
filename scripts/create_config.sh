@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 PROJECTNAME=${1}
 PROJECTVERSION=${2}

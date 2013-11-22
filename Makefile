@@ -171,9 +171,9 @@ distclean: clean docclean
 # MISCS
 
 $(CONFIG_HEADER_FILE): $(INCLUDEDIR)
-	@. $(PROJECTDIR)/scripts/create_config.sh \
-	  $(PROJECTNAME) $(PROJECTVERSION) $(PROJECTSUBVERSION) \
-	  $(PROJECTREVISION) $@
+	$(PROJECTDIR)/scripts/create_config.sh \
+	$(PROJECTNAME) $(PROJECTVERSION) $(PROJECTSUBVERSION) \
+	$(PROJECTREVISION) $@
 
 $(INCLUDEDIR):
 	@echo "No include directory at $(INCLUDEDIR)"
