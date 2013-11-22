@@ -20,7 +20,7 @@ DEPS	= $(OBJS:.o=.d)
 # Include functions
 include $(SCRIPTSDIR)/Makefile.functions
 
-all: $(PROJECTNAME)
+all: $(CONFIG_PROJECT_NAME)
 
 %.o: %.cc
 	@echo " CPP" $@
@@ -32,7 +32,7 @@ all: $(PROJECTNAME)
 	  sed -e 's/^ *//' -e 's/$$/:/' >> $*.d
 	@rm -f $*.d.tmp
 
-$(PROJECTNAME): $(OBJS)
+$(CONFIG_PROJECT_NAME): $(OBJS)
 	@echo " LD " $(notdir $@)
 	@g++ $(OBJS) -o $@ $(LDFLAGS)
 

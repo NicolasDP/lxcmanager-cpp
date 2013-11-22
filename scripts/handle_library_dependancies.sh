@@ -13,7 +13,7 @@ else
 fi
 
 REPOS_FOLDER=repo
-REPOS_LIST="boost websocket"
+REPOS_LIST="boost websocket kconfig"
 
 BOOST_LIBRARIES="program_options"
 BOOST_OPTIONS="link=static threading=multi runtime-link=static"
@@ -29,15 +29,22 @@ clone_repository()
 
     case "${REPO_NAME}" in
         websocket)
-            if [ ! -d $REPOS_FOLDER/websocket ]; then
+            if [ ! -d ${REPOS_FOLDER}/websocket ]; then
                 git clone https://github.com/zaphoyd/websocketpp.git \
                           ${REPOS_FOLDER}/websocket
                 RETURN_VALUE=${?}
             fi
             ;;
         boost)
-            if [ ! -d $REPOS_FOLDER/boost ]; then
-                svn co http://svn.boost.org/svn/boost/trunk $REPOS_FOLDER/boost
+            if [ ! -d ${REPOS_FOLDER}/boost ]; then
+                svn co http://svn.boost.org/svn/boost/trunk ${REPOS_FOLDER}/boost
+                RETURN_VALUE=${?}
+            fi
+            ;;
+        kconfig)
+            if [ ! -d ${REPOS_FOLDER}/kconfig ]; then
+                git clone git://ymorin.is-a-geek.org/kconfig-frontends \
+                          ${REPOS_FOLDER}/kconfig
                 RETURN_VALUE=${?}
             fi
             ;;
@@ -72,6 +79,10 @@ update_repository()
                 ;;
             boost)
                 svn up
+                RETURN_VALUE=${?}
+                ;;
+            kconfig)
+                git pull
                 RETURN_VALUE=${?}
                 ;;
             *)
@@ -111,6 +122,12 @@ build_repository()
                 ./bootstrap.sh --prefix=${PROJECTDIR}/lib \
                       --with-libraries=${BOOST_LIBRARIES} \
                       && ./b2 ${BOOST_OPTIONS} install
+                RETURN_VALUE=${?}
+                ;;
+            kconfig)
+                ./bootstrap && ./configure --prefix=${PROJECTDIR}/scripts/kconfig \
+                      --disable-gconf --disable-qconf --disable-nconf \
+                      --enable-mconf && make install
                 RETURN_VALUE=${?}
                 ;;
             *)
@@ -199,7 +216,7 @@ case "${COMMAND}" in
         ;;
     *)
         message_error "wrong command: '${COMMAND}\`"
-        echo "Usage: ${SCRIPT_NAME} {init|update|build|delete} {boost|websocket}" >&1
+        echo "Usage: ${SCRIPT_NAME} {init|update|build|delete} {${REPOS_LIST}}" >&1
         exit 1
     ;;
 esac

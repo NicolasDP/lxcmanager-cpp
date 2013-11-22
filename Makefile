@@ -2,29 +2,7 @@
 # Edit the following variables to tune your project
 ##
 
-# The project name, the compilation result will be store at the project
-# directory (the root of the project) under this name
-PROJECTNAME = lxcmanager
-
-#
-# The version of the project: Version.Subversion-Revision
-PROJECTVERSION = 0
-PROJECTSUBVERSION = 1
-PROJECTREVISION = 0
-
-PACKAGES_NEEDED=g++ git subversion cmake graphviz doxygen
-
-# The installation directory
-INSTALLDIR = /usr/local
-BININSTALLDIR = $(INSTALLDIR)/bin
-INCLUDEINSTALLDIR = $(INSTALLDIR)/include/$(PROJECTNAME)
-LIBINSTALLDIR = $(INSTALLDIR)/lib
-DOCINSTALLDIR = $(INSTALLDIR)/doc
-
-# The tarball will be created under that name
-PROJECT_TARNAME = $(PROJECTNAME)-v$(PROJECTVERSION)-$(PROJECTSUBVERSION).$(PROJECTREVISION)
-# The archiving type tar.bz2
-PROJECT_TARTYPE = tar.bz2
+PACKAGES_NEEDED=g++ git subversion cmake graphviz doxygen gperf
 
 EXTRA_CPPFLAGS = -std=c++11 # -g -ggdb3
 EXTRA_LDFLAGS = -std=c++11
@@ -39,6 +17,21 @@ LIBSDIR=$(PROJECTDIR)/lib
 REPOSDIR=$(PROJECTDIR)/repo
 BINDIR=$(PROJECTDIR)/bin
 DOCDIR=$(PROJECTDIR)/doc
+BUILDCONFIGDIR=$(PROJECTDIR)/include/config
+
+-include $(BUILDCONFIGDIR)/auto.conf
+
+# The installation directory
+INSTALLDIR = /usr/local
+BININSTALLDIR = $(INSTALLDIR)/bin
+INCLUDEINSTALLDIR = $(INSTALLDIR)/include/$(CONFIG_PROJECT_NAME)
+LIBINSTALLDIR = $(INSTALLDIR)/lib
+DOCINSTALLDIR = $(INSTALLDIR)/doc
+
+# The tarball will be created under that name
+PROJECT_TARNAME = $(CONFIG_PROJECT_NAME)-v$(CONFIG_PROJECT_VERSION)
+# The archiving type tar.bz2
+PROJECT_TARTYPE = tar.bz2
 
 DOXYFILE = $(DOCDIR)/Doxyfile
 CONFIG_HEADER_FILE=$(INCLUDEDIR)/config.hh
@@ -55,12 +48,12 @@ LDFLAGS = $(EXTRA_LDFLAGS)
 #   required library
 LDFLAGS += -static -L$(LIBSDIR)/lib -lboost_program_options
 
-MAKEOPT  = --no-print-directory
+MAKEOPT  = #--no-print-directory
 MAKEOPT += CPPFLAGS="$(CPPFLAGS)"
 MAKEOPT += PROJECTDIR="$(PROEJCTDIR)"
 MAKEOPT += DOCDIR="$(DOCDIR)"
 MAKEOPT += LDFLAGS="$(LDFLAGS)"
-MAKEOPT += PROJECTNAME="$(BINDIR)/$(PROJECTNAME)"
+MAKEOPT += CONFIG_PROJECT_NAME="$(BINDIR)/$(CONFIG_PROJECT_NAME)"
 MAKEOPT += CONFIG_HEADER_FILE="$(CONFIG_HEADER_FILE)"
 MAKEOPT += SCRIPTSDIR="$(SCRIPTSDIR)"
 MAKEOPT += DOCDIR="$(DOCDIR)"
@@ -70,19 +63,21 @@ TARBALL= $(PROJECT_TARNAME).$(PROJECT_TARTYPE)
 
 include $(SCRIPTSDIR)/Makefile.functions
 
+V ?= @
+
 # BUILDING
 
-all: DEPENDANCES INIT $(SOURCEDIR) $(CONFIG_HEADER_FILE)
-	@make $(MAKEOPT) -C $(SOURCEDIR) all
+all: DEPENDANCES INIT $(SOURCEDIR) .config $(CONFIG_HEADER_FILE)
+	$(V)make $(MAKEOPT) -C $(SOURCEDIR) all
 
 build: doc all
 
 DEPENDANCES:
-	@for package in $(PACKAGES_NEEDED); do \
+	$(V)for package in $(PACKAGES_NEEDED); do \
 	  $(call check_package,$${package}) ; done
 
 update:
-	@if [ -f "$(PROJECTDIR)/.init" ]; then \
+	$(V)if [ -f "$(PROJECTDIR)/.init" ]; then \
 	   PROJECTDIR=$(PROJECTDIR) \
 	     $(SCRIPTSDIR)/handle_library_dependancies.sh build ; \
 	 fi
@@ -91,11 +86,33 @@ $(DOXYFILE):
 	$(SCRIPTSDIR)/generate_doxyfile.sh $(SOURCEDIR) $(DOCDIR) $(DOXYFILE)
 
 INIT: $(REPOSDIR)
-	@if [ ! -f "$(PROJECTDIR)/.init" ]; then \
+	$(V)if [ ! -d "$(BUILDCONFIGDIR)" ]; then mkdir -p $(BUILDCONFIGDIR); fi
+	$(V)if [ ! -f "$(PROJECTDIR)/.init" ]; then \
 	   PROJECTDIR=$(PROJECTDIR) \
 	     $(SCRIPTSDIR)/handle_library_dependancies.sh build \
 	     && touch $(PROJECTDIR)/.init ; \
 	 fi
+
+KCONFIG_OPTIONS  = LD_LIBRARY_PATH="$(SCRIPTSDIR)/kconfig/lib"
+KCONFIG_OPTIONS += KCONFIG_AUTOHEADER="$(SOURCEDIR)/include/config.hh"
+
+menuconfig: INIT
+	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-mconf src/Kconfig
+	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --silentoldconfig src/Kconfig
+
+oldconfig:
+	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --silentoldconfig src/Kconfig
+	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --silentoldconfig src/Kconfig
+
+$(CONFIG_HEADER_FILE): $(INCLUDEDIR)
+	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --silentoldconfig src/Kconfig
+
+defconfig:
+	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --alldefconfig src/Kconfig
+	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --silentoldconfig src/Kconfig
+.config:
+	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --alldefconfig src/Kconfig
+	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --silentoldconfig src/Kconfig
 
 help:
 	@echo ""
@@ -131,16 +148,15 @@ help:
 # DOCUMENTATION
 .PHONY: doc
 doc: $(DOXYFILE) DEPENDANCES
-	@make $(MAKEOPT) -C $(DOCDIR) doc
+	$(V)make $(MAKEOPT) -C $(DOCDIR) doc
 
 # RELEASING
 
 install: all
-	@mkdir -p $(BININSTALLDIR) \
+	$(V)mkdir -p $(BININSTALLDIR) \
 	  && cp $(BINDIR)/$(PROJECTNAME) $(BININSTALLDIR) \
 	  || (echo "ERROR: unable to install $(PROJECTNAME) in $(BININSTALLDIR)" && exit 1)
-
-	@mkdir -p $(INCLUDEINSTALLDIR) \
+	$(V)mkdir -p $(INCLUDEINSTALLDIR) \
 	  && cp -r $(INCLUDEDIR)/* $(INCLUDEINSTALLDIR) \
 	  || (echo "ERROR: unable to install headers $(PROJECTNAME) in $(INCLUDEINSTALLDIR)" && exit 1)
 
@@ -155,25 +171,30 @@ tar.bz2:
 # CLEANING
 
 docclean:
-	@make $(MAKEOPT) -C $(DOCDIR) distclean
+	$(V)make $(MAKEOPT) -C $(DOCDIR) distclean
 
 clean: $(SOURCEDIR)
-	@make $(MAKEOPT) -C $(SOURCEDIR) $@
-	@$(call remove_file,$(BINDIR)/$(PROJECTNAME))
-	@$(call remove_file,$(CONFIG_HEADER_FILE))
+	$(V)make $(MAKEOPT) -C $(SOURCEDIR) $@
+	$(V)$(call remove_file,$(PROJECTDIR)/.config)
+	$(V)$(call remove_file,$(PROJECTDIR)/.config.old)
+	$(V)$(call remove_file,$(BINDIR)/$(PROJECTNAME))
+	$(V)$(call remove_file,$(CONFIG_HEADER_FILE))
 
 distclean: clean docclean
-	@$(SCRIPTSDIR)/handle_library_dependancies.sh delete
-	@$(call remove_file,$(PROJECTDIR)/.init)
-	@$(call remove_file,$(TARBALL))
-	@$(call clean_dir,$(LIBSDIR))
+	$(V)$(call remove_file,$(PROJECTDIR)/.init)
+	$(V)$(call remove_file,$(TARBALL))
+	$(V)$(call clean_dir,$(LIBSDIR))
+	$(V)$(call clean_dir,$(BINDIR))
+	$(V)$(call remove_dir,$(SCRIPTSDIR)/kconfig)
+	$(V)$(call remove_dir,$(PROJECTDIR)/include)
+	$(V)$(SCRIPTSDIR)/handle_library_dependancies.sh delete
 
 # MISCS
 
-$(CONFIG_HEADER_FILE): $(INCLUDEDIR)
-	@. $(PROJECTDIR)/scripts/create_config.sh \
-	  $(PROJECTNAME) $(PROJECTVERSION) $(PROJECTSUBVERSION) \
-	  $(PROJECTREVISION) $@
+#	@echo "Error"
+#	@. $(PROJECTDIR)/scripts/create_config.sh \
+#	  $(PROJECTNAME) $(PROJECTVERSION) $(PROJECTSUBVERSION) \
+#	  $(PROJECTREVISION) $@
 
 $(INCLUDEDIR):
 	@echo "No include directory at $(INCLUDEDIR)"

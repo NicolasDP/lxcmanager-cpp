@@ -120,7 +120,7 @@ void LXCMLogger::log (LXCMLogger::level const lvl, std::string const& message)
       std::time_t tt = std::chrono::system_clock::to_time_t (now);
       LXCMLogger::_singleton->_logOutput
         << "[" << tt << "]"
-        << "[" << PROJECT_NAME << "]"
+        << "[" << CONFIG_PROJECT_NAME << "]"
         << "[" << level_header[lvl] << "] "
         << message << std::endl;
     }

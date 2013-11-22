@@ -43,8 +43,8 @@ OptionsParseCode LXCMVersion::checkOptions (po::variables_map& vm)
 {
   if (vm.count ("version"))
   {
-    std::cout << PROJECT_NAME << " version "
-      << PROJECT_VERSION_STRING
+    std::cout << CONFIG_PROJECT_NAME << " version "
+      << CONFIG_PROJECT_VERSION
       <<  std::endl;
     return ERR_HELP;
   }
