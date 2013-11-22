@@ -16,8 +16,10 @@
 #ifndef MODULE_HH_
 # define MODULE_HH_
 
-# include "options.hh"
+# include <string>
 
+
+class LXCMOptions;
 /*! @class LXCMModule
  *
  * Most of the part of this project should inherit from this class.
