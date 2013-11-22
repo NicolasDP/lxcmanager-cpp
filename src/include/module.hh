@@ -49,8 +49,9 @@ class LXCMModule
     {
       return this->_moduleName;
     }
+    LXCMModule (std::string string) : _moduleName (string) { };
 
-  protected:
+  private:
     /*! @brief Module name (all module must set this field - use for debug
      * and information log). */
     std::string _moduleName;

@@ -30,7 +30,9 @@ static std::string const level_header[LXCMLogger::NUMBER_OF_LOG_LEVEL] =
   [LXCMLogger::DEBUG] = "DEBUG"
 };
 
-LXCMLogger::LXCMLogger () : _logOutput ()
+LXCMLogger::LXCMLogger ()
+  : LXCMCoreModule ("LXCMLogger")
+  , _logOutput ()
 {
   LXCMOptions* opt = LXCMOptions::getOptions ();
 
@@ -48,8 +50,6 @@ LXCMLogger::LXCMLogger () : _logOutput ()
                   "set log file to write all of the log messages. If "
                   "not set, log messages are redirected to the error "
                   "output");
-
-  this->_moduleName = "LXCMLXCMLogger";
 }
 
 LXCMLogger::~LXCMLogger ()

@@ -18,13 +18,12 @@
 LXCMVersion* LXCMVersion::_singleton = NULL;
 
 LXCMVersion::LXCMVersion ()
+  : LXCMCoreModule ("LXCMVersion")
 {
   LXCMOptions* opts = LXCMOptions::getOptions ();
 
   opts->addModule (this);
   opts->addOption ("version", "print version");
-
-  this->_moduleName = "LXCMVersion";
 }
 
 LXCMVersion::~LXCMVersion ()
