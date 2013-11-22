@@ -1,0 +1,9 @@
+PROJECTNAME = ComPlugin
+
+all:
+	g++ main.cc communication.cc -o $(PROJECTNAME) -I ../../../lib/include/ -I./include -I../../include -L ../../../lib/lib/ -lboost_system
+
+clean:
+	rm -rf *.o
+	rm -rf *.d
+	rm -rf $(PROJECTNAME)

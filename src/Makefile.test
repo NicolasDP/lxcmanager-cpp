@@ -2,7 +2,11 @@
 
 SOURCES = \
     main.cc \
-    communication.cc
+    modules.cc \
+    options.cc \
+    version.cc \
+    logger.cc \
+    plugin.cc
 
 # DO NOT EDIT THE REMAINING FILE
 
@@ -15,23 +19,22 @@ DEPS	= $(OBJS:.o=.d)
 -include $(DEPS)
 
 # Variables
-PROJECTNAME = ComPlugin
+PROJECTNAME = lxcmanager
 
 EXTRA_CPPFLAGS = -std=c++11 # -g -ggdb3
 EXTRA_LDFLAGS = -std=c++11
 
 PROJECTDIR=${PWD}
 INCLUDEDIR=$(PROJECTDIR)/include
-EXTRA_INCLUDEDIR=../../include
-LIBSDIR=../../lib
+LIBSDIR=$(PROJECTDIR)/../lib
 
 CPPFLAGS  = -W -Wall -Wextra
-#CPPFLAGS += -Werror
+CPPFLAGS += -Werror
 CPPFLAGS += $(EXTRA_CPPFLAGS)
-CPPFLAGS += -I$(INCLUDEDIR) -I$(EXTRA_INCLUDEDIR) -I$(LIBSDIR)/include
+CPPFLAGS += -I$(INCLUDEDIR) -I$(LIBSDIR)/include
 
 LDFLAGS = $(EXTRA_LDFLAGS)
-LDFLAGS += -L$(LIBSDIR)/lib -lboost_system
+LDFLAGS += -static -L$(LIBSDIR)/lib -lboost_program_options
 
 all: $(PROJECTNAME)
 
@@ -60,4 +63,3 @@ clean:
 	rm -rf *.o
 	rm -rf *.d
 	rm -rf $(PROJECTNAME)
-
