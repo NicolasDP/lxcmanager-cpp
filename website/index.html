@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript">
+      var websocket;
+      $(function() {
+        window.WebSocket = window.WebSocket || window.MozWebSocket;
+
+        websocket = new WebSocket('ws://localhost:9002', 'http-only');
+
+        websocket.onopen = function () {
+          $('h1').css('color', 'green');
+        };
+
+        websocket.onerror = function () {
+          $('h1').css('color', 'red');
+        };
+
+        websocket.onmessage = function (message) {
+          $('div').append($('<p>', { text: message.data }));
+        };
+      });
+
+      function SendMessage () {
+        var msg=document.getElementById("sendMessage");
+        websocket.send(msg.value);
+
+      }
+
+    </script>
+  </head>
+  <body>
+    <h1>WebSockets test - LXC Manager</h1>
+    <br><br>
+    <strong>Message:</strong>
+    <br>
+    <input id="sendMessage" size="35" value="LXC Manager ROXX">
+    <br>
+    <button id="send" onclick="SendMessage()">Send</button>
+    <div></div>
+  </body>
+</html>
