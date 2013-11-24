@@ -1,13 +1,20 @@
-.init
-
 config.hh
 
 *.d
 *.o
 
-bin
+.config
+Makefile.var
+
 lib
-repo
+build
+include
+scripts/kconfig/
 
 doc/html/
 doc/Doxyfile
+
+repo/.repos_initialized
+repo/boost/
+repo/kconfig/
+repo/websocket/

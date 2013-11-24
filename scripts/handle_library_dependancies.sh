@@ -5,14 +5,14 @@ COMMAND_ARGUMENT=${2}
 
 if [ -f "./bash_basic_functions.sh" ]; then
     source ./bash_basic_functions.sh
-elif [ -f "./scripts/bash_basic_functions.sh" ]; then
-    source ./scripts/bash_basic_functions.sh
+elif [ -f "${PROJECTDIR}/scripts/bash_basic_functions.sh" ]; then
+    source ${PROJECTDIR}/scripts/bash_basic_functions.sh
 else
     echo "ERROR: Unable to find basic bash functions" >&2
     exit 1
 fi
 
-REPOS_FOLDER=repo
+REPOS_FOLDER=${PROJECTDIR}/repo
 REPOS_LIST="boost websocket kconfig"
 
 BOOST_LIBRARIES="program_options"

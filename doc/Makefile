@@ -1,11 +1,19 @@
+#
+include ../Makefile.var
+
 # Include functions
 include $(SCRIPTSDIR)/Makefile.functions
 
 all: doc
 
-doc:
-	doxygen $(DOXYFILE)
+$(DOXYFILE):
+	$(V)$(SCRIPTSDIR)/generate_doxyfile.sh $(SOURCEDIR) $(DOCDIR) $(DOXYFILE)
 
-distclean:
-	@$(call remove_file,$(DOXYFILE))
-	@$(call remove_dir,$(DOCDIR)/html)
+doc: $(DOXYFILE)
+	$(V)doxygen $(DOXYFILE)
+
+clean:
+	$(V)$(call remove_file,$(DOXYFILE))
+
+distclean: clean
+	$(V)$(call remove_dir,$(DOCDIR)/html)

@@ -1,3 +1,9 @@
+# Contain project directory paths and other minimal infomation
+include ../Makefile.var
+
+# Contain the project name
+-include $(BUILDCONFIGFILE)
+
 # Source files
 
 SOURCES = \
@@ -20,7 +26,7 @@ DEPS	= $(OBJS:.o=.d)
 # Include functions
 include $(SCRIPTSDIR)/Makefile.functions
 
-all: $(CONFIG_PROJECT_NAME)
+all: $(BUILDDIR)/$(CONFIG_PROJECT_NAME)
 
 %.o: %.cc
 	@echo " CPP" $@
@@ -32,7 +38,7 @@ all: $(CONFIG_PROJECT_NAME)
 	  sed -e 's/^ *//' -e 's/$$/:/' >> $*.d
 	@rm -f $*.d.tmp
 
-$(CONFIG_PROJECT_NAME): $(OBJS)
+$(BUILDDIR)/$(CONFIG_PROJECT_NAME): $(OBJS) $(BUILDCONFIGFILE)
 	@echo " LD " $(notdir $@)
 	@g++ $(OBJS) -o $@ $(LDFLAGS)
 
@@ -43,3 +49,4 @@ clean:
 	@for objs in $(DEPS); do \
 	  $(call remove_file,$${objs}) ; done
 
+distclean: clean
