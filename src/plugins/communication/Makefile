@@ -1,11 +1,12 @@
-# Source files
+include ../../../Makefile.var
+-include $(BUILDCONFIGFILE)
 
+# Source files
 SOURCES = \
     main.cc \
     communication.cc
 
 # DO NOT EDIT THE REMAINING FILE
-
 OBJS	= $(SOURCES:.cc=.o)
 DEPS	= $(OBJS:.o=.d)
 
@@ -15,25 +16,14 @@ DEPS	= $(OBJS:.o=.d)
 -include $(DEPS)
 
 # Variables
-PROJECTNAME = ComPlugin
+MODULENAME = ComPlugin
 
-EXTRA_CPPFLAGS = -std=c++11 # -g -ggdb3
-EXTRA_LDFLAGS = -std=c++11
+CPPFLAGS  = -I./include
+CPPFLAGS += -I$(INCLUDEDIR)
+CPPFLAGS += -I$(LIBSDIR)/include
+LDFLAGS += -lboost_system
 
-PROJECTDIR=${PWD}
-INCLUDEDIR=$(PROJECTDIR)/include
-EXTRA_INCLUDEDIR=../../include
-LIBSDIR=../../lib
-
-CPPFLAGS  = -W -Wall -Wextra
-#CPPFLAGS += -Werror
-CPPFLAGS += $(EXTRA_CPPFLAGS)
-CPPFLAGS += -I$(INCLUDEDIR) -I$(EXTRA_INCLUDEDIR) -I$(LIBSDIR)/include
-
-LDFLAGS = $(EXTRA_LDFLAGS)
-LDFLAGS += -L$(LIBSDIR)/lib -lboost_system
-
-all: $(PROJECTNAME)
+all: $(MODULENAME)
 
 %.o: %.cc
 	@echo " CPP" $@
@@ -45,19 +35,16 @@ all: $(PROJECTNAME)
 	  sed -e 's/^ *//' -e 's/$$/:/' >> $*.d
 	@rm -f $*.d.tmp
 
-$(PROJECTNAME): $(OBJS)
+$(MODULENAME): $(OBJS)
 	@echo " LD " $(notdir $@)
 	@g++ $(OBJS) -o $@ $(LDFLAGS)
 
 
-# clean:
-# 	@for objs in $(OBJS); do \
-# 	  $(call remove_file,$${objs}) ; done
-# 	@for objs in $(DEPS); do \
-# 	  $(call remove_file,$${objs}) ; done
-
 clean:
-	rm -rf *.o
-	rm -rf *.d
-	rm -rf $(PROJECTNAME)
+	@for objs in $(OBJS); do \
+	  $(call remove_file,$${objs}) ; done
+	@for objs in $(DEPS); do \
+	  $(call remove_file,$${objs}) ; done
 
+distclean: clean
+	@true

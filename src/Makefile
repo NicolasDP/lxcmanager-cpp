@@ -26,7 +26,10 @@ DEPS	= $(OBJS:.o=.d)
 # Include functions
 include $(SCRIPTSDIR)/Makefile.functions
 
-all: $(BUILDDIR)/$(CONFIG_PROJECT_NAME)
+all: $(BUILDDIR)/$(CONFIG_PROJECT_NAME) modules
+
+modules:
+	$(V)make $(MAKEOPT) -C plugins all
 
 %.o: %.cc
 	@echo " CPP" $@
@@ -50,3 +53,4 @@ clean:
 	  $(call remove_file,$${objs}) ; done
 
 distclean: clean
+	@true
