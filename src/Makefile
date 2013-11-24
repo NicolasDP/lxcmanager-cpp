@@ -26,6 +26,12 @@ DEPS	= $(OBJS:.o=.d)
 # Include functions
 include $(SCRIPTSDIR)/Makefile.functions
 
+# BOOST libraries
+#   TODO: If you want to add a specific boost library do not forget to update
+#   the handle_library_scripts.sh (in $(SCRIPTSDIR)) in order to build the
+#   required library
+LDFLAGS += -lboost_program_options -static
+
 all: $(BUILDDIR)/$(CONFIG_PROJECT_NAME) modules
 
 modules:
@@ -44,7 +50,6 @@ modules:
 $(BUILDDIR)/$(CONFIG_PROJECT_NAME): $(OBJS) $(BUILDCONFIGFILE)
 	@echo " LD " $(notdir $@)
 	@g++ $(OBJS) -o $@ $(LDFLAGS)
-
 
 clean:
 	@for objs in $(OBJS); do \

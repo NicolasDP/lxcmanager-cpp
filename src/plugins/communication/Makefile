@@ -6,7 +6,6 @@ include $(SCRIPTSDIR)/Makefile.functions
 
 # Source files
 SOURCES = \
-    main.cc \
     communication.cc
 
 # DO NOT EDIT THE REMAINING FILE
@@ -19,12 +18,14 @@ DEPS	= $(OBJS:.o=.d)
 -include $(DEPS)
 
 # Variables
-MODULENAME = ComPlugin
+MODULENAME = ComPlugin.so
 
 CPPFLAGS  = -I./include
 CPPFLAGS += -I$(INCLUDEDIR)
 CPPFLAGS += -I$(LIBSDIR)/include
-LDFLAGS += -lboost_system -lpthread
+CPPFLAGS += -fPIC
+
+LDFLAGS += -shared -Bstatic -lboost_system #-lpthread
 
 all: $(MODULENAME)
 

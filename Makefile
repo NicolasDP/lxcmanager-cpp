@@ -39,12 +39,8 @@ ifneq ($(PROJECTDIR), ${PWD})
   CPPFLAGS += -std=c++11 # -g -ggdb3
   CPPFLAGS += -I$(INCLUDEDIR) -I$(LIBSDIR)/include
 
-  LDFLAGS = -std=c++11
-  # BOOST libraries
-  #   TODO: If you want to add a specific boost library do not forget to update
-  #   the handle_library_scripts.sh (in $(SCRIPTSDIR)) in order to build the
-  #   required library
-  LDFLAGS += -static -L$(LIBSDIR)/lib -lboost_program_options
+  LDFLAGS  = -std=c++11
+  LDFLAGS += -L$(LIBSDIR)/lib
 endif
 
 all: all-build
