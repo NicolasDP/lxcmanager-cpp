@@ -28,6 +28,7 @@ class LXCMPlugin : public LXCMModule
      * @return it returns the plugin version (_version)
      */
     int				getVersion ();
+    LXCMPlugin (std::string string) : LXCMModule (string) { };
 
   public:
     /*! @brief virtual interface that child must implement

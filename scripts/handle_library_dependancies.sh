@@ -15,7 +15,7 @@ fi
 REPOS_FOLDER=${PROJECTDIR}/repo
 REPOS_LIST="boost websocket kconfig"
 
-BOOST_LIBRARIES="program_options"
+BOOST_LIBRARIES="program_options,system"
 BOOST_OPTIONS="link=static threading=multi runtime-link=static"
 
 SCRIPT_NAME=`basename ${0}`
@@ -121,7 +121,7 @@ build_repository()
             boost)
                 ./bootstrap.sh --prefix=${PROJECTDIR}/lib \
                       --with-libraries=${BOOST_LIBRARIES} \
-                      && ./b2 ${BOOST_OPTIONS} install
+                      && ./b2 ${BOOST_OPTIONS} stage && ./b2 ${BOOST_OPTIONS} install
                 RETURN_VALUE=${?}
                 ;;
             kconfig)

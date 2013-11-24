@@ -16,9 +16,9 @@
 #include "communication.hh"
 
 LXCMPCommunication::LXCMPCommunication ()
+  : LXCMPlugin ("plugin::Communication")
 {
   this->_server = new Server ();
-  this->_moduleName = "Communication";
 }
 
 LXCMPCommunication::~LXCMPCommunication ()

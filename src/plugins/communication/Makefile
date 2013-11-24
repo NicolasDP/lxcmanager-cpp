@@ -21,7 +21,7 @@ MODULENAME = ComPlugin
 CPPFLAGS  = -I./include
 CPPFLAGS += -I$(INCLUDEDIR)
 CPPFLAGS += -I$(LIBSDIR)/include
-LDFLAGS += -lboost_system
+LDFLAGS += -lboost_system -lpthread
 
 all: $(MODULENAME)
 
