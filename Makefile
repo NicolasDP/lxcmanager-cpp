@@ -2,7 +2,7 @@
 # Edit the following variables to tune your project
 ##
 
-PACKAGES_NEEDED=g++ git subversion cmake graphviz doxygen gperf
+PACKAGES_NEEDED=g++ git subversion cmake graphviz doxygen gperf flex bison libbison-dev libncurses5-dev
 
 EXTRA_CPPFLAGS = -std=c++11 # -g -ggdb3
 EXTRA_LDFLAGS = -std=c++11
@@ -48,7 +48,7 @@ LDFLAGS = $(EXTRA_LDFLAGS)
 #   required library
 LDFLAGS += -static -L$(LIBSDIR)/lib -lboost_program_options
 
-MAKEOPT  = #--no-print-directory
+MAKEOPT  = --no-print-directory
 MAKEOPT += CPPFLAGS="$(CPPFLAGS)"
 MAKEOPT += PROJECTDIR="$(PROEJCTDIR)"
 MAKEOPT += DOCDIR="$(DOCDIR)"

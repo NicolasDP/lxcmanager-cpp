@@ -54,9 +54,9 @@ clone_repository()
     esac
 
     if [ ${RETURN_VALUE} -eq 0 ]; then
-        message_info "${REPO_NAME} sources cloned"
+        message_info "\`${REPO_NAME}' sources cloned"
     else
-        message_error "unable to clone the ${REPO_NAME} sources"
+        message_error "unable to clone the \`${REPO_NAME}' sources"
     fi
 
     return ${RETURN_VALUE}
@@ -93,9 +93,9 @@ update_repository()
     fi
 
     if [ ${RETURN_VALUE} -eq 0 ]; then
-        message_info "${REPO_NAME} sources updated"
+        message_info "\`${REPO_NAME}' sources updated"
     else
-        message_error "unable to update the ${REPO_NAME} sources"
+        message_error "unable to update the \`${REPO_NAME}' sources"
     fi
 
     return ${RETURN_VALUE}
@@ -141,7 +141,7 @@ build_repository()
     if [ ${RETURN_VALUE} -eq 0 ]; then
         message_info "${REPO_NAME} sources built"
     else
-        message_error "unable to build the ${REPO_NAME} sources"
+        message_error "unable to build the \`${REPO_NAME}' sources"
     fi
 
     return ${RETURN_VALUE}
@@ -150,19 +150,17 @@ build_repository()
 delete_repository()
 {
     REPO_NAME=${1}
-    RETURN_VALUE=1
 
     if [ -n ${REPO_NAME} -a -d ${REPOS_FOLDER}/${REPO_NAME} ]; then
         rm -r -f ${REPOS_FOLDER}/${REPO_NAME}
         if [ ${?} -eq 0 ]; then
-            message_info "${REPO_NAME} sources removed"
-            RETURN_VALUE=0
-        else
-            message_error "unable to delete the ${REPO_NAME} library sources"
+            message_info "\`${REPO_NAME}' sources removed"
         fi
+    else
+        message_info "no \`${REPO_NAME}' in \`${REPOS_FOLDER}'"
     fi
 
-    return ${RETURN_VALUE}
+    return 0
 }
 
 case "${COMMAND}" in
