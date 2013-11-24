@@ -30,7 +30,7 @@ include $(SCRIPTSDIR)/Makefile.functions
 #   TODO: If you want to add a specific boost library do not forget to update
 #   the handle_library_scripts.sh (in $(SCRIPTSDIR)) in order to build the
 #   required library
-LDFLAGS += -lboost_program_options -static
+LDFLAGS += -Wl,-Bstatic,-lboost_program_options -Wl,-Bdynamic -ldl
 
 all: $(BUILDDIR)/$(CONFIG_PROJECT_NAME) modules
 

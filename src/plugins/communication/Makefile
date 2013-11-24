@@ -25,7 +25,7 @@ CPPFLAGS += -I$(INCLUDEDIR)
 CPPFLAGS += -I$(LIBSDIR)/include
 CPPFLAGS += -fPIC
 
-LDFLAGS += -shared -Bstatic -lboost_system #-lpthread
+LDFLAGS += -shared -lboost_system
 
 all: $(MODULENAME)
 

@@ -60,3 +60,8 @@ void LXCMPCommunication::quit ()
 {
 //    LXCMLogger::log (LXCMLogger::DEBUG, "Quit Communication Plugin");
 }
+
+extern "C" LXCMPlugin* create (void)
+{
+  return new LXCMPCommunication ();
+}

@@ -14,11 +14,15 @@
  * along with LXCManager.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "modules.hh"
+#include "logger.hh"
 
-LXCMPlugModules* LXCMPlugModules::_modules = NULL;
+#include <dirent.h>
+#include <dlfcn.h>
+LXCMPlugModules* LXCMPlugModules::_instance = NULL;
 
 LXCMPlugModules::LXCMPlugModules ()
   : LXCMCoreModule ("LXCMPlugModules")
+  , _modules ()
 {
   LXCMOptions* opts = LXCMOptions::getOptions ();
 
@@ -29,9 +33,9 @@ LXCMPlugModules::LXCMPlugModules ()
 
 void LXCMPlugModules::init (void)
 {
-  if (NULL == LXCMPlugModules::_modules)
+  if (NULL == LXCMPlugModules::_instance)
   {
-    LXCMPlugModules::_modules = new LXCMPlugModules ();
+    LXCMPlugModules::_instance = new LXCMPlugModules ();
   }
 }
 
@@ -39,9 +43,51 @@ OptionsParseCode LXCMPlugModules::checkOptions (po::variables_map& vm)
 {
   if (vm.count ("plugdir"))
   {
+    DIR* dp;
+    struct dirent *ep;
+    std::string directory (vm["plugdir"].as<std::string> ());
+
     std::cout << "Plugin directory is \""
-              <<  vm["plugdir"].as<std::string> () << "\""
+              <<  directory << "\""
               <<  std::endl;
+
+    dp = opendir (directory.c_str());
+    if (dp)
+    {
+      while ((ep = readdir (dp)) != NULL)
+      {
+        std::string content;
+	void* lib;
+        switch (ep->d_type)
+        {
+        case DT_REG:
+          content = ep->d_name;
+          content = directory + std::string ("/") + content;
+          lib = dlopen ( content.c_str (), RTLD_LAZY);
+          if (lib)
+	  {
+	    std::cerr << "  " << content << " is a lib" << std::endl;
+            LXCMPlugin* (*create)(void);
+	    create = (LXCMPlugin* (*)(void))dlsym (lib, "create");
+	    LXCMPlugin* tmp = create ();
+	    std::string name (tmp->moduleName ());
+	    std::cout << "    " << name << std::endl;
+            _modules.insert (std::pair<std::string, LXCMPlugin*> (name, tmp));
+	    /* TODO: not sure if this is here where I have to close the dlib */
+	    dlclose (lib);
+	  }
+          break;
+        default:
+          break;
+        }
+      }
+      closedir (dp);
+    }
+    else
+    {
+      LXCMLogger::log (LXCMLogger::ERROR, "Unable to find plugins");
+      return ERR_ERROR;
+    }
   }
 
   return ERR_NONE;

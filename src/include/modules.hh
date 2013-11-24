@@ -21,6 +21,8 @@
 
 # include "options.hh"
 
+# include "plugin.hh"
+
 /*! @class LXCMPlugModules
  *
  * TODO */
@@ -43,7 +45,10 @@ class LXCMPlugModules : public LXCMCoreModule
 
   private:
     /*! @brief the unique instant of this singleton */
-    static LXCMPlugModules* _modules;
+    static LXCMPlugModules* _instance;
+
+  private:
+    std::map<std::string, LXCMPlugin*> _modules;
 };
 
 #endif /* !PLUGMODULES_HH_ */

@@ -16,7 +16,7 @@ REPOS_FOLDER=${PROJECTDIR}/repo
 REPOS_LIST="boost websocket kconfig"
 
 BOOST_LIBRARIES="program_options,system"
-BOOST_OPTIONS="threading=multi"
+BOOST_OPTIONS="threading=multi runtime-link=shared"
 
 SCRIPT_NAME=`basename ${0}`
 
