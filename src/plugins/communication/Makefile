@@ -1,6 +1,9 @@
 include ../../../Makefile.var
 -include $(BUILDCONFIGFILE)
 
+# Include functions
+include $(SCRIPTSDIR)/Makefile.functions
+
 # Source files
 SOURCES = \
     main.cc \

@@ -51,6 +51,7 @@ clean:
 	  $(call remove_file,$${objs}) ; done
 	@for objs in $(DEPS); do \
 	  $(call remove_file,$${objs}) ; done
+	$(V)make $(MAKEOPT) -C plugins $@
 
 distclean: clean
-	@true
+	$(V)make $(MAKEOPT) -C plugins $@
