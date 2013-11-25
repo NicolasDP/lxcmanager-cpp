@@ -4,6 +4,7 @@ config.hh
 *.o
 
 .config
+.config.old
 Makefile.var
 
 lib

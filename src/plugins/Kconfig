@@ -1,0 +1,8 @@
+menu "Plugins"
+  config PLUGIN_COMMUNICATION
+    bool
+    default y
+    prompt "Compile the communication plugin"
+    help
+      Compile the communication plugin
+endmenu

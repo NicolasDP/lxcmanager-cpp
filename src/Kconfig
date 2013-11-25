@@ -1,13 +1,7 @@
-config PROJECT_NAME
-  string
-  default "lxcmanager"
-  prompt "The project name"
-  help
-	This is the project name. This is also the compilation output name.
-
-config PROJECT_VERSION
-  string
-  default "0.1.0"
-  prompt "The project version"
-  help
-	This is the project version. You should not modify it yourself.
+menu "Core"
+  config CORE_DEBUG
+    int
+    range 0 2
+    default 1
+    prompt "Set the debug level 0 (ERROR) to 2 (DEBUG)"
+endmenu

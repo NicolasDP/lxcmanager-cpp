@@ -49,6 +49,7 @@ clean:
 	  $(call remove_file,$${objs}) ; done
 	@for objs in $(DEPS); do \
 	  $(call remove_file,$${objs}) ; done
+	@$(call remove_file,$(MODULENAME))
 
 distclean: clean
 	@true

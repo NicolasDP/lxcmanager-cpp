@@ -108,15 +108,15 @@ KCONFIG_OPTIONS  = LD_LIBRARY_PATH="$(SCRIPTSDIR)/kconfig/lib"
 KCONFIG_OPTIONS += KCONFIG_AUTOHEADER="$(SOURCEDIR)/include/config.hh"
 
 menuconfig: INIT_REPOS
-	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-mconf src/Kconfig
-	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --silentoldconfig src/Kconfig
+	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-mconf Kconfig
+	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --silentoldconfig Kconfig
 
 oldconfig: INIT_REPOS .config
-	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --silentoldconfig src/Kconfig
+	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --silentoldconfig Kconfig
 
 defconfig: INIT_REPOS
-	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --alldefconfig src/Kconfig
-	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --silentoldconfig src/Kconfig
+	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --alldefconfig Kconfig
+	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --silentoldconfig Kconfig
 
 .config:
 	@echo "ERROR: no .config file. Use make menuconfig OR make defconfig"
