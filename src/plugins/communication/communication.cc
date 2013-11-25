@@ -15,8 +15,8 @@
 
 #include "communication.hh"
 
-LXCMPCommunication::LXCMPCommunication ()
-  : LXCMPlugin ("plugin::Communication")
+LXCMPCommunication::LXCMPCommunication (PluginTools* pt)
+  : LXCMPlugin ("plugin::Communication", 0x0001, pt)
 {
   this->_server = new Server ();
 }
@@ -30,12 +30,11 @@ void on_message (websocketpp::connection_hdl			hdl,
 		 Server::message_ptr				msg)
 {
   std::cout << msg->get_payload () << std::endl;
-//  LXCMLogger::log (LXCMLogger::INFO, msg->get_payload ());
 }
 
 void LXCMPCommunication::init ()
 {
-//  LXCMLogger::log (LXCMLogger::DEBUG, "Initialize Communication Plugin");
+  this->_pluginTools->log (LXCMLogger::DEBUG, "Initialize Communication Plugin");
 
   this->_server->set_message_handler (&on_message);
 
@@ -44,7 +43,7 @@ void LXCMPCommunication::init ()
 
 void LXCMPCommunication::start ()
 {
-//  LXCMLogger::log (LXCMLogger::DEBUG, "Start Communication Plugin");
+  this->_pluginTools->log (LXCMLogger::DEBUG, "Start Communication Plugin");
 
   this->_server->listen (PORT);
   this->_server->start_accept ();
@@ -53,15 +52,15 @@ void LXCMPCommunication::start ()
 
 void LXCMPCommunication::stop ()
 {
-//  LXCMLogger::log (LXCMLogger::DEBUG, "Stop Communication Plugin");
+  this->_pluginTools->log (LXCMLogger::DEBUG, "Stop Communication Plugin");
 }
 
 void LXCMPCommunication::quit ()
 {
-//    LXCMLogger::log (LXCMLogger::DEBUG, "Quit Communication Plugin");
+  this->_pluginTools->log (LXCMLogger::DEBUG, "Quit Communication Plugin");
 }
 
-extern "C" LXCMPlugin* create (void)
+extern "C" LXCMPlugin* create (PluginTools* pt)
 {
-  return new LXCMPCommunication ();
+  return new LXCMPCommunication (pt);
 }

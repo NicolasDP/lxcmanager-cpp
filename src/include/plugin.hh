@@ -17,6 +17,7 @@
 # define PLUGIN_HH_
 
 # include "module.hh"
+# include "plugintools.hh"
 
 class LXCMPlugin : public LXCMModule
 {
@@ -27,8 +28,13 @@ class LXCMPlugin : public LXCMModule
      *
      * @return it returns the plugin version (_version)
      */
-    int				getVersion ();
-    LXCMPlugin (std::string string) : LXCMModule (string) { };
+    int	getVersion ();
+    LXCMPlugin (std::string string, int version, PluginTools const* pt)
+      : LXCMModule (string)
+      , _version (version)
+      , _pluginTools (pt)
+    {
+    };
 
   public:
     /*! @brief virtual interface that child must implement
@@ -36,25 +42,26 @@ class LXCMPlugin : public LXCMModule
      * If there is no initialization to handle, then this function does
      * nothing but must be implemented.
      */
-    virtual void		init () = 0;
+    virtual void init () = 0;
     /*! @brief virtual interface that child must implement
      * It is use to start a plugin, the plugin should be autonomous
      * after this function is called.
      */
-    virtual void		start () = 0;
+    virtual void start () = 0;
     /*! @brief virtual interface that child must implement
      * It is use to stop a plugin
      */
-    virtual void		stop () = 0;
+    virtual void stop () = 0;
     /*! @brief virtual interface that child must implement
      * It is use to exit a plugin
      * If there is nothing to do, then this function does
      * nothing but must be implemented.
      */
-    virtual void		quit () = 0;
+    virtual void quit () = 0;
 
   protected:
-    int				_version;
+    int	_version;
+    PluginTools const* _pluginTools;
 };
 
 #endif /* !PLUGIN_HH_ */

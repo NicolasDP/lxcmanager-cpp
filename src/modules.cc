@@ -14,8 +14,8 @@
  * along with LXCManager.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "modules.hh"
-#include "logger.hh"
 #include "config.hh"
+#include "plugintools.hh"
 
 #include <dirent.h>
 #include <dlfcn.h>
@@ -63,6 +63,12 @@ OptionsParseCode LXCMPlugModules::checkOptions (po::variables_map& vm)
 
 /* ----/ Plugin Loading /--------------------------------------------------- */
 
+static PluginTools const plugTools =
+{
+  /* defined in include/logger.hh */
+  .log = log_message,
+};
+
 int LXCMPlugModules::exploreDir (std::string& dir)
 {
   DIR* dp;
@@ -88,14 +94,16 @@ int LXCMPlugModules::exploreDir (std::string& dir)
         lib = dlopen ( path.c_str (), RTLD_LAZY);
         if (lib)
         {
-          LXCMPlugin* (*create)(void);
+          LXCMPlugin* (*create)(PluginTools const*);
           std::string name;
 
-          create = (LXCMPlugin* (*)(void))dlsym (lib, "create");
-          LXCMPlugin* tmp = create ();
+          create = (LXCMPlugin* (*)(PluginTools const*))dlsym (lib, "create");
+          LXCMPlugin* tmp = create (&plugTools);
 
           name = tmp->moduleName ();
           log_message (LXCMLogger::INFO, "load module '%s'", name.c_str ());
+
+	  tmp->init ();
 
           this->_modules.insert (std::pair<std::string, LXCMPlugin*> (name, tmp));
 

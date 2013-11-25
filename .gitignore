@@ -2,6 +2,7 @@ config.hh
 
 *.d
 *.o
+*.so
 
 .config
 .config.old
@@ -9,7 +10,7 @@ Makefile.var
 
 lib
 build
-include
+include/generated
 scripts/kconfig/
 
 doc/html/

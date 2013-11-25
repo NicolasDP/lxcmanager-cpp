@@ -35,7 +35,7 @@ class LXCMPCommunication : public LXCMPlugin
     /*! @brief The plugin constructor
      * Instanciates the websocket server
      */
-    LXCMPCommunication ();
+    LXCMPCommunication (PluginTools* pt);
     /*! @brief The plugin destructor
      * Deletes the websocket server
      */
