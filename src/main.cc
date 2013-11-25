@@ -27,11 +27,10 @@ int main (int argc, char** argv)
 
   optPC = opts->parseOptions (argc, argv);
 
-  LXCMLogger::log (LXCMLogger::INFO, "Program initialized");
-
   switch (optPC)
   {
     case ERR_NONE:
+      LXCMPlugModules::loadModules ();
       ret = 0;
       break;
     case ERR_HELP:
@@ -39,12 +38,9 @@ int main (int argc, char** argv)
       break;
     case ERR_ERROR:
     default:
-      LXCMLogger::log (LXCMLogger::ERROR, "Bad option parameter");
       ret = 1;
       break;
   }
-
-  LXCMLogger::log (LXCMLogger::INFO, "Program terminated (TODO)");
 
   return ret;
 }

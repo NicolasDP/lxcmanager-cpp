@@ -81,4 +81,6 @@ class LXCMLogger : public LXCMCoreModule
     std::ofstream _logOutput;
 };
 
+void log_message (LXCMLogger::level lvl, char const* fmt, ...);
+
 #endif /* !LOGGER_HH_ */

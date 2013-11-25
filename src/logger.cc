@@ -18,6 +18,9 @@
 #include <ctime>
 #include <chrono>
 
+#include <stdio.h>
+#include <stdarg.h>
+
 #include "logger.hh"
 #include "config.hh"
 
@@ -36,7 +39,7 @@ LXCMLogger::LXCMLogger ()
 {
   LXCMOptions* opt = LXCMOptions::getOptions ();
 
-  this->_maxLevel = LXCMLogger::ERROR;
+  this->_maxLevel = (LXCMLogger::level)CONFIG_CORE_DEFAULT_LOG_LEVEL;
 
   opt->addModule (this);
   opt->addOption ("log-level",
@@ -135,4 +138,18 @@ void LXCMLogger::log (LXCMLogger::level const lvl, std::string const& message)
 void __attribute__ ((constructor)) coremodule_init_logger (void)
 {
   LXCMLogger::init ();
+}
+
+void log_message (LXCMLogger::level lvl, char const* fmt, ...)
+{
+  std::string message;
+  char tmp[256];
+  va_list ap;
+
+  va_start (ap, fmt);
+  vsnprintf (tmp, sizeof (tmp), fmt, ap);
+  va_end (ap);
+
+  message = tmp;
+  LXCMLogger::log (lvl, message);
 }

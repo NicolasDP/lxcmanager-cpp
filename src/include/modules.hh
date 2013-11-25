@@ -38,10 +38,19 @@ class LXCMPlugModules : public LXCMCoreModule
   public:
     /*! @brief init it initializes the unique instance of this singleton */
     static void init (void);
+    /*! @brief load modules from the default path or from the directory given
+     * in command line option.
+     * @return 0 on success or 1 on error */
+    static int loadModules (void);
     /*! @brief checkOptions
      * it implements the virtual method defined in the
      * LXCMCoreModule. */
     OptionsParseCode checkOptions (po::variables_map&);
+
+  private:
+    /*! @brief load modules from the path given in parameter
+     * @return 0 on success or 1 on error */
+    int exploreDir (std::string&);
 
   private:
     /*! @brief the unique instant of this singleton */
@@ -49,6 +58,7 @@ class LXCMPlugModules : public LXCMCoreModule
 
   private:
     std::map<std::string, LXCMPlugin*> _modules;
+    std::string _modulesDirectory;
 };
 
 #endif /* !PLUGMODULES_HH_ */
