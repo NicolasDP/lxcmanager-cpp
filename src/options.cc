@@ -96,7 +96,8 @@ OptionsParseCode LXCMOptions::parseOptions (int const argc, char const* const* a
   end = this->_modules->end ();
   for (it = this->_modules->begin (); it != end; it++)
   {
-    LXCMLogger::log (LXCMLogger::INFO, (*it)->moduleName ());
+    log_message (LXCMLogger::DEBUG,
+                 "core option %s loaded", (*it)->moduleName ().c_str ());
     ret = (*it)->checkOptions (*this->_vm);
     if (ERR_NONE != ret)
     {
