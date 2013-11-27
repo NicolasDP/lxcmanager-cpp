@@ -52,7 +52,7 @@ TEST
 
  To test the project, the plugins will probably need to be dynamicaly linked to
  the project's dependancy libraries (for example the plugin *communication*
- needs the boost_system library available) then as this library comes from the
+ needs the boost\_system library available) then as this library comes from the
  project's dependancies, you may need to add the project's library path to your
  environment system. For example, the following command should works:
 
