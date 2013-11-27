@@ -2,7 +2,7 @@ INTRODUCTION
 ============
 
  **LXCManager** is an open-source project which aims to manage *LinuX
- Containes* on a server with an easy to use web interface.
+ Containers* on a server with an easy-to-use web interface.
 
 BUILD
 =====
