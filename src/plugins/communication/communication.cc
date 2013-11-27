@@ -26,8 +26,7 @@ LXCMPCommunication::~LXCMPCommunication ()
   delete this->_server;
 }
 
-void on_message (websocketpp::connection_hdl			hdl,
-		 Server::message_ptr				msg)
+void on_message (websocketpp::connection_hdl hdl, Server::message_ptr msg)
 {
   std::cout << msg->get_payload () << std::endl;
 }

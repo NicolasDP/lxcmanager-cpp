@@ -30,8 +30,7 @@ int main (int argc, char** argv)
   switch (optPC)
   {
     case ERR_NONE:
-      LXCMPlugModules::loadModules ();
-      ret = 0;
+      ret = LXCMPlugModules::loadModules ();
       break;
     case ERR_HELP:
       ret = 0;
