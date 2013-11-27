@@ -47,6 +47,17 @@ COMPILING
 
     42sh$ make all
 
+DOCUMENTATION
+=============
+
+ The project comes with **Doxygen** documentation. To generate it, use the
+ following command:
+
+    42sh$ make doc
+
+ The documentation will be readable in **HTML** format in the documentation
+ directory: *$(PROJECTDIR)/doc/html/index.html*
+
 TEST
 ====
 
