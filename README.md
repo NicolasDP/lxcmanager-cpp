@@ -23,7 +23,7 @@ DEPENDANCIES
  source version of each dependancy, build them and install then in the *lib*
  subdirectory. You can update them by using the following command:
 
- 42sh$ make update-repos
+    42sh$ make update-repos
 
 CONFIGURATION
 -------------
