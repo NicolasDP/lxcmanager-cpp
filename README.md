@@ -17,7 +17,7 @@ DEPENDANCIES
  link them automatically.
  **To launch the dependancies building, use the following command:**
 
- 42sh$ make all
+    42sh$ make all
 
  The first time you build the project, the build system will download the last
  source version of each dependancy, build them and install then in the *lib*
@@ -33,11 +33,11 @@ CONFIGURATION
  for example. You can use the following command to use the *ncurse* interface
  to change the options:
 
- 42sh$ make meuconfig
+    42sh$ make meuconfig
 
  You also can use the default configuration wich comes with the project:
 
- 42sh$ make defconfig
+    42sh$ make defconfig
 
 COMPILING
 ---------
@@ -45,7 +45,7 @@ COMPILING
  Now, the project's dependancies are installed in the build system. You can use
  the usual *Makefile targets* to work with the project:
 
- 42sh$ make all
+    42sh$ make all
 
 TEST
 ====
@@ -56,15 +56,5 @@ TEST
  project's dependancies, you may need to add the project's library path to your
  environment system. For example, the following command should works:
 
- 42sh$ LD_LIBRARY_PATH=${PWD}/lib/lib ./build/lxcmanager --help
+    42sh$ LD_LIBRARY_PATH=${PWD}/lib/lib ./build/lxcmanager --help
 
-ARCHITECTURE FOLDER
-=================================================================================
-
-This section contain the description of each folder
-
-    * src: contain the sources of the projet
-    * bin: contain the binaries
-    * lib: contain the libraries
-    * repo: is the place for all additional repositories
-    * www: is used to put every web interface useful things
