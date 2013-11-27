@@ -18,7 +18,7 @@ DEPS	= $(OBJS:.o=.d)
 -include $(DEPS)
 
 # Variables
-MODULENAME = ComPlugin.so
+MODULENAME = $(MODULESDIR)/ComPlugin.so
 
 CPPFLAGS  = -I./include
 CPPFLAGS += -I$(INCLUDEDIR)
@@ -28,6 +28,7 @@ CPPFLAGS += -fPIC
 LDFLAGS += -shared -lboost_system
 
 all: $(MODULENAME)
+	@true
 
 %.o: %.cc
 	@echo " CPP" $@

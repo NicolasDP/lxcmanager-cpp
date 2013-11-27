@@ -50,6 +50,10 @@ modules:
 $(BUILDDIR)/$(CONFIG_PROJECT_NAME): $(OBJS) $(BUILDCONFIGFILE)
 	@echo " LD " $(notdir $@)
 	@g++ $(OBJS) -o $@ $(LDFLAGS)
+	@echo ""
+	@echo "  CORE STORED AT:"
+	@echo "  " $(@)
+	@echo ""
 
 clean:
 	@for objs in $(OBJS); do \

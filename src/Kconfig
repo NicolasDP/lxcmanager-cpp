@@ -2,7 +2,7 @@ menu "Core"
   config CORE_DEFAULT_LOG_LEVEL
     int
     range 0 2
-    default 1
+    default 2
     prompt "Set the default log level. 0 (ERROR) to 2 (DEBUG)"
 
   config CORE_DEFAULT_PLUGINS_DIRECTORY

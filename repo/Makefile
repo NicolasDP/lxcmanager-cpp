@@ -21,6 +21,7 @@ build-%: %
 build: build-boost build-websocket build-kconfig
 
 init: .repos_initialized
+	@true
 
 .repos_initialized:
 	$(V)make $(MAKEOPT) build
