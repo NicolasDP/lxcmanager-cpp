@@ -13,34 +13,23 @@
  * You should have received a copy of the GNU General Public License
  * along with LXCManager.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef COMMUNICATION_HH_
-# define COMMUNICATION_HH_
-
-# define PORT 9002
-
-# include <deque>
-//# include <iostream>
-
-# include <websocketpp/config/asio_no_tls.hpp>
-# include <websocketpp/server.hpp>
+#ifndef EMPTY_HH_
+# define EMPTY_HH_
 
 # include "plugin.hh"
 # include "logger.hh"
 
-typedef
-websocketpp::server<websocketpp::config::asio> WSServer;
-
-class LXCMPCommunication : public LXCMPlugin
+class LXCMPEmpty : public LXCMPlugin
 {
   public:
     /*! @brief The plugin constructor
      * Instanciates the websocket server
      */
-    LXCMPCommunication (PluginTools* pt);
+    LXCMPEmpty (PluginTools* pt);
     /*! @brief The plugin destructor
      * Deletes the websocket server
      */
-    ~LXCMPCommunication ();
+    ~LXCMPEmpty ();
 
   public:
     /*! @brief The mandatory init function
@@ -63,11 +52,6 @@ class LXCMPCommunication : public LXCMPlugin
     void quit ();
 
     void receive (LXCMPlugin*, std::string&);
-
-  private:
-    WSServer* _server;
-    std::string _moduleName;
-//    std::deque<LXCMPConnection> _connections;
 };
 
-#endif /* !COMMUNICATION_HH_ */
+#endif /* !EMPTY_HH_ */

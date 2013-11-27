@@ -26,7 +26,9 @@ LXCMPlugModules* LXCMPlugModules::_instance = NULL;
 /* Constructor */
 LXCMPlugModules::LXCMPlugModules ()
   : LXCMCoreModule ("LXCMPlugModules")
+  , _libs ()
   , _modules ()
+  , _modulesLock ()
   , _modulesDirectory (CONFIG_CORE_DEFAULT_PLUGINS_DIRECTORY)
 {
   LXCMOptions* opts = LXCMOptions::getOptions ();
@@ -34,6 +36,13 @@ LXCMPlugModules::LXCMPlugModules ()
   opts->addModule (this);
   opts->addOption ("plugdir,p", po::value<std::string> (),
                    "path to plugins directory");
+}
+
+LXCMPlugModules::~LXCMPlugModules ()
+{
+  /* TODO:
+   *  -1- delete each _modules
+   *  -2- close each _libs */
 }
 
 /* Initialize the unique instance if needed */
@@ -105,10 +114,16 @@ int LXCMPlugModules::exploreDir (std::string& dir)
 
 	  tmp->init ();
 
-          this->_modules.insert (std::pair<std::string, LXCMPlugin*> (name, tmp));
+          this->_modules[name] = tmp;
+          this->_modulesLock[name] = false;
+	  this->_libs[name] = lib;
 
-          /* TODO: not sure if this is here where I have to close the dlib */
-          dlclose (lib);
+	  if (name.compare ("plugin::Communication") == 0)
+	  {
+	      std::string m1 ("plugin::Empty");
+	      std::string m2 ("COUCOU");
+	      this->sendMessageToPlugin (tmp, m1, m2);
+	  }
         }
         break;
       case DT_DIR:
@@ -139,6 +154,47 @@ int LXCMPlugModules::loadModules (void)
 {
   return LXCMPlugModules::_instance->exploreDir
                           (LXCMPlugModules::_instance->_modulesDirectory);
+}
+
+int LXCMPlugModules::sendMessageToPlugin (LXCMPlugin* from,
+                                          std::string& to,
+                                          std::string& message)
+{
+  int ret = -1;
+  LXCMPlugin* plugin = NULL;
+
+  if (!from)
+  {
+    ret = -1;
+    goto do_not_send_message;
+  }
+
+  plugin = this->_modules[to];
+  if (!plugin)
+  {
+    ret = -2;
+    goto do_not_send_message;
+  }
+
+  if (this->_modulesLock[to])
+  {
+    ret = -3;
+    goto do_not_send_message;
+  }
+
+  this->_modulesLock[to] = true;
+  plugin->receive (from, message);
+  this->_modulesLock[to] = false;
+
+do_not_send_message:
+  return ret;
+}
+
+int LXCMPlugModules::sendMessage (LXCMPlugin* from,
+                                  std::string& to,
+                                  std::string& message)
+{
+  return LXCMPlugModules::_instance->sendMessageToPlugin (from, to, message);
 }
 
 /* ----/ Plugin Loading /--------------------------------------------------- */

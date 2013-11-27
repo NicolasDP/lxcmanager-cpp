@@ -18,7 +18,7 @@
 LXCMPCommunication::LXCMPCommunication (PluginTools* pt)
   : LXCMPlugin ("plugin::Communication", 0x0001, pt)
 {
-  this->_server = new Server ();
+  this->_server = new WSServer ();
 }
 
 LXCMPCommunication::~LXCMPCommunication ()
@@ -26,7 +26,7 @@ LXCMPCommunication::~LXCMPCommunication ()
   delete this->_server;
 }
 
-void on_message (websocketpp::connection_hdl hdl, Server::message_ptr msg)
+void on_message (websocketpp::connection_hdl hdl, WSServer::message_ptr msg)
 {
   std::cout << msg->get_payload () << std::endl;
 }
@@ -52,6 +52,12 @@ void LXCMPCommunication::start ()
 void LXCMPCommunication::stop ()
 {
   this->_pluginTools->log (LXCMLogger::DEBUG, "Stop Communication Plugin");
+}
+
+void LXCMPCommunication::receive (LXCMPlugin* from, std::string& message)
+{
+  this->_pluginTools->log (LXCMLogger::DEBUG, "receive message '%' from %s",
+                           from->moduleName ().c_str (), message.c_str ());
 }
 
 void LXCMPCommunication::quit ()

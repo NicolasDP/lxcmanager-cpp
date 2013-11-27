@@ -47,17 +47,21 @@ class LXCMPlugModules : public LXCMCoreModule
      * LXCMCoreModule. */
     OptionsParseCode checkOptions (po::variables_map&);
 
+    static int sendMessage (LXCMPlugin*, std::string&, std::string&);
+
   private:
     /*! @brief load modules from the path given in parameter
      * @return 0 on success or 1 on error */
     int exploreDir (std::string&);
-
+    int sendMessageToPlugin (LXCMPlugin*, std::string&, std::string&);
   private:
     /*! @brief the unique instant of this singleton */
     static LXCMPlugModules* _instance;
 
   private:
+    std::map<std::string, void*> _libs;
     std::map<std::string, LXCMPlugin*> _modules;
+    std::map<std::string, bool> _modulesLock;
     std::string _modulesDirectory;
 };
 
