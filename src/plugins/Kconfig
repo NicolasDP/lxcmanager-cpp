@@ -5,4 +5,9 @@ menu "Plugins"
     prompt "Compile the communication plugin"
     help
       Compile the communication plugin
+
+  config PLUGIN_EMPTY
+    bool
+    default n
+    prompt "Compile the empty (for test only)"
 endmenu

@@ -14,6 +14,7 @@
  * along with LXCManager.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "options.hh"
+#include "exceptions.hh"
 #include "logger.hh"
 
 LXCMOptions* LXCMOptions::_singleton = NULL;
@@ -47,15 +48,13 @@ LXCMOptions* LXCMOptions::getOptions ()
   return LXCMOptions::_singleton;
 }
 
-OptionsParseCode LXCMOptions::checkOptions (po::variables_map& vm)
+void LXCMOptions::checkOptions (po::variables_map& vm)
 {
   if (vm.count ("help"))
   {
     std::cout << *this->_desc << std::endl;
-    return ERR_HELP;
+    throw LXCMException (__func__, __FILE__, __LINE__, 0);
   }
-
-  return ERR_NONE;
 }
 
 void LXCMOptions::addModule (LXCMCoreModule* module)
@@ -76,11 +75,10 @@ void LXCMOptions::addOption (char const* n, po::value_semantic const* v, char co
   this->_desc->add_options () (n, v, d);
 }
 
-OptionsParseCode LXCMOptions::parseOptions (int const argc, char const* const* argv)
+void LXCMOptions::parseOptions (int const argc, char const* const* argv)
 {
   std::deque<LXCMCoreModule*>::iterator it;
   std::deque<LXCMCoreModule*>::iterator end;
-  OptionsParseCode ret = ERR_NONE;
 
   try
   {
@@ -89,8 +87,8 @@ OptionsParseCode LXCMOptions::parseOptions (int const argc, char const* const* a
   }
   catch (std::exception& e)
   {
-    std::cerr << e.what () << std::endl;
-    return ERR_ERROR;
+    log_message (LXCMLogger::ERROR, e.what ());
+    throw LXCMException (__func__, __FILE__, __LINE__, EINVAL, e.what ());
   }
 
   end = this->_modules->end ();
@@ -98,13 +96,16 @@ OptionsParseCode LXCMOptions::parseOptions (int const argc, char const* const* a
   {
     log_message (LXCMLogger::DEBUG,
                  "core option %s loaded", (*it)->moduleName ().c_str ());
-    ret = (*it)->checkOptions (*this->_vm);
-    if (ERR_NONE != ret)
+    try
     {
-      break;
+      (*it)->checkOptions (*this->_vm);
+    }
+    catch (LXCMException& e)
+    {
+      log_message (LXCMLogger::DEBUG, e.what ());
+      throw LXCMException (e.getErrorMessage (),
+                           __func__, __FILE__, __LINE__, e.getCode ());
     }
   }
-
-  return ret;
 }
 

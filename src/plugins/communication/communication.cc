@@ -63,10 +63,13 @@ void LXCMPCommunication::receive (LXCMPlugin* from, std::string& message)
                          EBUSY, "message already locked");
   }
 
-  this->_lockMessage = true;
-  this->_pluginTools->log (LXCMLogger::DEBUG, "receive message '%s' from %s",
-                           message.c_str (), from->moduleName ().c_str ());
-  this->_lockMessage = false;
+  if (from)
+  {
+    this->_lockMessage = true;
+    this->_pluginTools->log (LXCMLogger::DEBUG, "receive message '%s' from %s",
+                             message.c_str (), from->moduleName ().c_str ());
+    this->_lockMessage = false;
+  }
 }
 
 void LXCMPCommunication::quit ()

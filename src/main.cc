@@ -18,28 +18,36 @@
 #include "version.hh"
 #include "modules.hh"
 #include "logger.hh"
+#include "exceptions.hh"
 
 int main (int argc, char** argv)
 {
-  int ret;
-  OptionsParseCode optPC;
   LXCMOptions* opts = LXCMOptions::getOptions ();
 
-  optPC = opts->parseOptions (argc, argv);
-
-  switch (optPC)
+  try
   {
-    case ERR_NONE:
-      ret = LXCMPlugModules::loadModules ();
-      break;
-    case ERR_HELP:
-      ret = 0;
-      break;
-    case ERR_ERROR:
-    default:
-      ret = 1;
-      break;
+    opts->parseOptions (argc, argv);
+  }
+  catch (LXCMException& e)
+  {
+    if (e.getCode ())
+    {
+      log_message (LXCMLogger::ERROR, e.getErrorMessage ().c_str ());
+      return e.getCode ();
+    }
+    return 0;
   }
 
-  return ret;
+  try
+  {
+    LXCMPlugModules::loadModules ();
+    LXCMPlugModules::sendMessage (NULL, "plugin::Empty", "Mon message");
+  }
+  catch (LXCMException& e)
+  {
+    log_message (LXCMLogger::ERROR, e.getErrorMessage ().c_str ());
+    return e.getCode ();
+  }
+
+  return 0;
 }

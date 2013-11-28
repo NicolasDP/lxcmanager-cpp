@@ -84,7 +84,7 @@ class LXCMOptions : public LXCMCoreModule
      *  @param po::value_semantic which defines the type of a
      *  required argement. See boost::program_option for more
      *  information.
-     *  @param char const*: the option description */
+     *  @param char const*: the option's description */
     void addOption (char const*, po::value_semantic const*, char const*);
 
     /*! @brief parseOptions
@@ -98,9 +98,9 @@ class LXCMOptions : public LXCMCoreModule
      *
      *  @return OptionsParseCode
      *  see OptionsParseCode */
-    OptionsParseCode parseOptions (int const, char const* const*);
+    void parseOptions (int const, char const* const*);
     /*! @brief checkOptions (see LXCModule) */
-    OptionsParseCode checkOptions (po::variables_map&);
+    void checkOptions (po::variables_map&);
 
   private:
     /*! @brief constructor */

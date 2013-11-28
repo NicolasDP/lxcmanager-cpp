@@ -40,7 +40,7 @@ class LXCMVersion : public LXCMCoreModule
      * @brief checkOptions
      * it implements the virtual method defined in the
      * LXCMCoreModule. */
-    OptionsParseCode checkOptions (po::variables_map&);
+     void checkOptions (po::variables_map&);
 
   private:
     /*! @brief Constructor */

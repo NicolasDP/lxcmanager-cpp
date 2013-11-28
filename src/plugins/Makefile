@@ -6,7 +6,7 @@ include ../../Makefile.var
 include $(SCRIPTSDIR)/Makefile.functions
 
 MODULE_LIST_$(CONFIG_PLUGIN_COMMUNICATION) += communication
-MODULE_LIST_y += empty
+MODULE_LIST_$(CONFIG_PLUGIN_EMPTY) += empty
 
 all:
 	$(V)for module in $(MODULE_LIST_y); do \

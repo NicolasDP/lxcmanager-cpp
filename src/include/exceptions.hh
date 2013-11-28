@@ -11,11 +11,10 @@
 class LXCMException: public std::exception
 {
   public:
-
     LXCMException (char const* func,
                    char const* file, int const line,
                    int const code)
-      : _function (func)
+      : _have_upper (false), _upper (""), _function (func)
       , _file (file), _line (line)
       , _code (code), _message (strerror (code))
     {
@@ -24,7 +23,25 @@ class LXCMException: public std::exception
     LXCMException (char const* func,
                    char const* file, int const line,
                    int const code, char const* message)
-      : _function (func)
+      : _have_upper (false), _upper (""), _function (func)
+      , _file (file), _line (line)
+      , _code (code), _message (message)
+    {
+    };
+
+    LXCMException (std::string upper, char const* func,
+                   char const* file, int const line,
+                   int const code)
+      : _have_upper (true), _upper (upper), _function (func)
+      , _file (file), _line (line)
+      , _code (code), _message (strerror (code))
+    {
+    } ;
+
+    LXCMException (std::string upper, char const* func,
+                   char const* file, int const line,
+                   int const code, char const* message)
+      : _have_upper (true), _upper (upper), _function (func)
       , _file (file), _line (line)
       , _code (code), _message (message)
     {
@@ -43,6 +60,11 @@ class LXCMException: public std::exception
     {
       std::ostringstream oss;
 
+      if (this->_have_upper)
+      {
+        oss << this->_upper << std::endl;
+      }
+
       oss << "[" << this->_function << "]"
           << "[" << this->_file << ":" << this->_line << "]"
           << "[" << strerror (this->_code) << "] "
@@ -56,6 +78,8 @@ class LXCMException: public std::exception
       return this->_code;
     };
   private:
+    bool _have_upper;
+    std::string _upper;
     std::string _function;
     std::string _file;
     int _line;

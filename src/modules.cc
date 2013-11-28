@@ -55,7 +55,7 @@ void LXCMPlugModules::init (void)
 }
 
 /* Check the related options and handle them */
-OptionsParseCode LXCMPlugModules::checkOptions (po::variables_map& vm)
+void LXCMPlugModules::checkOptions (po::variables_map& vm)
 {
   if (vm.count ("plugdir"))
   {
@@ -66,8 +66,6 @@ OptionsParseCode LXCMPlugModules::checkOptions (po::variables_map& vm)
 
     this->_modulesDirectory = directory;
   }
-
-  return ERR_NONE;
 }
 
 /* ----/ Plugin Loading /--------------------------------------------------- */
@@ -78,17 +76,16 @@ static PluginTools const plugTools =
   .log = log_message,
 };
 
-int LXCMPlugModules::exploreDir (std::string& dir)
+void LXCMPlugModules::exploreDir (std::string& dir)
 {
   DIR* dp;
   struct dirent *ep;
-  int ret = 0;
 
   dp = opendir (dir.c_str ());
 
   if (dp)
   {
-    while ((!ret) && (ep = readdir (dp)) != NULL)
+    while ((ep = readdir (dp)) != NULL)
     {
       std::string content (ep->d_name);
       std::string path (dir + std::string ("/") + content);
@@ -105,24 +102,28 @@ int LXCMPlugModules::exploreDir (std::string& dir)
         {
           LXCMPlugin* (*create)(PluginTools const*);
           std::string name;
+          LXCMPlugin* tmp = NULL;
 
           create = (LXCMPlugin* (*)(PluginTools const*))dlsym (lib, "create");
-          LXCMPlugin* tmp = create (&plugTools);
+          if (create)
+          {
+            tmp = create (&plugTools);
 
-          name = tmp->moduleName ();
-          log_message (LXCMLogger::INFO, "load module '%s'", name.c_str ());
+            if (tmp)
+            {
+              name = tmp->moduleName ();
+              log_message (LXCMLogger::INFO, "load module '%s'", name.c_str ());
 
-	  tmp->init ();
+              tmp->init ();
 
-          this->_modules[name] = tmp;
-	  this->_libs[name] = lib;
-
-	  if (name.compare ("plugin::Communication") == 0)
-	  {
-	      std::string m1 ("plugin::Empty");
-	      std::string m2 ("COUCOU");
-              this->sendMessageToPlugin (tmp, m1, m2);
+              this->_modules[name] = tmp;
+              this->_libs[name] = lib;
+            }
 	  }
+          else
+          {
+            dlclose (lib);
+          }
         }
         break;
       case DT_DIR:
@@ -130,7 +131,17 @@ int LXCMPlugModules::exploreDir (std::string& dir)
          * it */
         if (content.compare (".") && content.compare (".."))
         {
-          ret = this->exploreDir (path);
+          try
+          {
+            this->exploreDir (path);
+          }
+          catch (LXCMException& e)
+          {
+            std::cout << __FILE__ << ":" << __LINE__ << " POKE" << std::endl;
+            throw LXCMException (e.getErrorMessage (),
+                                 __func__, __FILE__, __LINE__,
+                                 e.getCode ());
+          }
         }
         break;
       default:
@@ -142,57 +153,69 @@ int LXCMPlugModules::exploreDir (std::string& dir)
   else
   {
     log_message (LXCMLogger::ERROR, "can't open directory: %s", dir.c_str ());
-    ret = -1;
+    throw LXCMException (__func__, __FILE__, __LINE__, errno, dir.c_str ());
   }
-
-  return ret;
 }
 
 /* Main interface to request the PlugModules instance to load the modules */
-int LXCMPlugModules::loadModules (void)
+void LXCMPlugModules::loadModules (void)
 {
-  return LXCMPlugModules::_instance->exploreDir
-                          (LXCMPlugModules::_instance->_modulesDirectory);
+  LXCMPlugModules::_instance->exploreDir
+                              (LXCMPlugModules::_instance->_modulesDirectory);
 }
 
-int LXCMPlugModules::sendMessageToPlugin (LXCMPlugin* from,
+void LXCMPlugModules::sendMessageToPlugin (LXCMPlugin* from,
                                           std::string& to,
                                           std::string& message)
 {
-  int ret = 0;
   LXCMPlugin* plugin = NULL;
 
+#if 0
   if (!from)
   {
-    ret = -1;
-    goto do_not_send_message;
+    throw LXCMException (__func__, __FILE__, __LINE__,
+                         EINVAL, "'from' value is NULL");
   }
+#endif
 
   plugin = this->_modules[to];
   if (!plugin)
   {
-    ret = -2;
-    goto do_not_send_message;
+    char message[256];
+    memset (message, 0, sizeof (message));
+    snprintf (message, sizeof (message), "no module named %s", to.c_str ());
+    throw LXCMException (__func__, __FILE__, __LINE__, EINVAL, message);
   }
 
   try
   {
     plugin->receive (from, message);
   }
-  catch (LXCMException e) {
+  catch (LXCMException& e)
+  {
     log_message (LXCMLogger::DEBUG, e.getErrorMessage ().c_str ());
-    ret = -3;
+    throw LXCMException (e.getErrorMessage (),
+                         __func__, __FILE__, __LINE__,
+                         e.getCode ());
   }
-
-do_not_send_message:
-  return ret;
 }
 
-int LXCMPlugModules::sendMessage (LXCMPlugin* from,
-                                  std::string& to,
-                                  std::string& message)
+void LXCMPlugModules::sendMessage (LXCMPlugin* from,
+                                  char const* to,
+                                  char const* message)
 {
-  return LXCMPlugModules::_instance->sendMessageToPlugin (from, to, message);
+  std::string dest (to);
+  std::string content (message);
+  try
+  {
+    LXCMPlugModules::_instance->sendMessageToPlugin (from, dest, content);
+  }
+  catch (LXCMException& e)
+  {
+    throw LXCMException (e.getErrorMessage (),
+                         __func__, __FILE__, __LINE__,
+                         e.getCode ());
+  }
 }
 
 /* ----/ Plugin Loading /--------------------------------------------------- */

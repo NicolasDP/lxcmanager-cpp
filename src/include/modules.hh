@@ -41,19 +41,19 @@ class LXCMPlugModules : public LXCMCoreModule
     /*! @brief load modules from the default path or from the directory given
      * in command line option.
      * @return 0 on success or 1 on error */
-    static int loadModules (void);
+    static void loadModules (void);
     /*! @brief checkOptions
      * it implements the virtual method defined in the
      * LXCMCoreModule. */
-    OptionsParseCode checkOptions (po::variables_map&);
+    void checkOptions (po::variables_map&);
 
-    static int sendMessage (LXCMPlugin*, std::string&, std::string&);
+    static void sendMessage (LXCMPlugin*, char const*, char const*);
 
   private:
     /*! @brief load modules from the path given in parameter
      * @return 0 on success or 1 on error */
-    int exploreDir (std::string&);
-    int sendMessageToPlugin (LXCMPlugin*, std::string&, std::string&);
+    void exploreDir (std::string&);
+    void sendMessageToPlugin (LXCMPlugin*, std::string&, std::string&);
   private:
     /*! @brief the unique instant of this singleton */
     static LXCMPlugModules* _instance;

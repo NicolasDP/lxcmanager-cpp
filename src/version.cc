@@ -14,6 +14,7 @@
  * along with LXCManager.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "version.hh"
+#include "exceptions.hh"
 
 LXCMVersion* LXCMVersion::_singleton = NULL;
 
@@ -39,17 +40,15 @@ void LXCMVersion::init ()
   }
 }
 
-OptionsParseCode LXCMVersion::checkOptions (po::variables_map& vm)
+void LXCMVersion::checkOptions (po::variables_map& vm)
 {
   if (vm.count ("version"))
   {
     std::cout << CONFIG_PROJECT_NAME << " version "
       << CONFIG_PROJECT_VERSION
       <<  std::endl;
-    return ERR_HELP;
+    throw LXCMException (__func__, __FILE__, __LINE__, 0);
   }
-
-  return ERR_NONE;
 }
 
 void __attribute__ ((constructor)) coremodule_init_version (void)

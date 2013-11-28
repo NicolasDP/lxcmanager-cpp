@@ -23,6 +23,7 @@
 
 #include "logger.hh"
 #include "config.hh"
+#include "exceptions.hh"
 
 LXCMLogger* LXCMLogger::_singleton = NULL;
 
@@ -68,7 +69,7 @@ void LXCMLogger::init ()
   }
 }
 
-OptionsParseCode LXCMLogger::checkOptions (po::variables_map& vm)
+void LXCMLogger::checkOptions (po::variables_map& vm)
 {
   if (vm.count ("log-level"))
   {
@@ -89,7 +90,8 @@ OptionsParseCode LXCMLogger::checkOptions (po::variables_map& vm)
       case NUMBER_OF_LOG_LEVEL:
       default:
         this->log (LXCMLogger::ERROR, "Log level not available");
-        return ERR_ERROR;
+        throw LXCMException (__func__, __FILE__, __LINE__,
+                             EINVAL, "Log level not available");
     }
   }
 
@@ -106,11 +108,9 @@ OptionsParseCode LXCMLogger::checkOptions (po::variables_map& vm)
     catch (std::exception& e)
     {
       this->log (LXCMLogger::ERROR, e.what ());
-      return ERR_ERROR;
+      throw LXCMException (__func__, __FILE__, __LINE__, EINVAL, e.what ());
     }
   }
-
-  return ERR_NONE;
 }
 
 void LXCMLogger::log (LXCMLogger::level const lvl, std::string const& message)
