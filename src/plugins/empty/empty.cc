@@ -14,6 +14,7 @@
  * along with LXCManager.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "empty.hh"
+#include "exceptions.hh"
 
 LXCMPEmpty::LXCMPEmpty (PluginTools* pt)
   : LXCMPlugin ("plugin::Empty", 0x0001, pt)
@@ -40,19 +41,18 @@ void LXCMPEmpty::stop ()
   this->_pluginTools->log (LXCMLogger::DEBUG, "Stop");
 }
 
-int LXCMPEmpty::receive (LXCMPlugin* from, std::string& message)
+void LXCMPEmpty::receive (LXCMPlugin* from, std::string& message)
 {
-  int ret = -1;
-  if (!this->_lockMessage)
+  if (this->_lockMessage)
   {
-    this->_lockMessage = true;
-    this->_pluginTools->log (LXCMLogger::DEBUG, "receive message '%s' from %s",
-                           message.c_str (), from->moduleName ().c_str ());
-    this->_lockMessage = false;
-    ret = 0;
+    throw LXCMException (__func__, __FILE__, __LINE__,
+                         EBUSY, "message already locked");
   }
 
-  return ret;
+  this->_lockMessage = true;
+  this->_pluginTools->log (LXCMLogger::DEBUG, "receive message '%s' from %s",
+                           message.c_str (), from->moduleName ().c_str ());
+  this->_lockMessage = false;
 }
 
 void LXCMPEmpty::quit ()

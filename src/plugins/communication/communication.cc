@@ -14,6 +14,7 @@
  * along with LXCManager.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "communication.hh"
+#include "exceptions.hh"
 
 LXCMPCommunication::LXCMPCommunication (PluginTools* pt)
   : LXCMPlugin ("plugin::Communication", 0x0001, pt)
@@ -54,20 +55,18 @@ void LXCMPCommunication::stop ()
   this->_pluginTools->log (LXCMLogger::DEBUG, "Stop Communication Plugin");
 }
 
-int LXCMPCommunication::receive (LXCMPlugin* from, std::string& message)
+void LXCMPCommunication::receive (LXCMPlugin* from, std::string& message)
 {
-  int ret = -1;
-
-  if (!this->_lockMessage)
+  if (this->_lockMessage)
   {
-    this->_lockMessage = true;
-    this->_pluginTools->log (LXCMLogger::DEBUG, "receive message '%s' from %s",
-                           message.c_str (), from->moduleName ().c_str ());
-    this->_lockMessage = false;
-    ret = 0;
+    throw LXCMException (__func__, __FILE__, __LINE__,
+                         EBUSY, "message already locked");
   }
 
-  return ret;
+  this->_lockMessage = true;
+  this->_pluginTools->log (LXCMLogger::DEBUG, "receive message '%s' from %s",
+                           message.c_str (), from->moduleName ().c_str ());
+  this->_lockMessage = false;
 }
 
 void LXCMPCommunication::quit ()

@@ -60,7 +60,7 @@ class LXCMPlugin : public LXCMModule
     virtual void quit () = 0;
 
     /*! @Function to send a message */
-    virtual int receive (LXCMPlugin*, std::string&) = 0;
+    virtual void receive (LXCMPlugin*, std::string&) = 0;
 
   protected:
     int	_version;

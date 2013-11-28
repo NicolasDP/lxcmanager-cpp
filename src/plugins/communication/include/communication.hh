@@ -62,7 +62,7 @@ class LXCMPCommunication : public LXCMPlugin
      */
     void quit ();
 
-    int receive (LXCMPlugin*, std::string&);
+    void receive (LXCMPlugin*, std::string&);
 
   private:
     WSServer* _server;

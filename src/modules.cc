@@ -16,6 +16,7 @@
 #include "modules.hh"
 #include "config.hh"
 #include "plugintools.hh"
+#include "exceptions.hh"
 
 #include <dirent.h>
 #include <dlfcn.h>
@@ -120,7 +121,7 @@ int LXCMPlugModules::exploreDir (std::string& dir)
 	  {
 	      std::string m1 ("plugin::Empty");
 	      std::string m2 ("COUCOU");
-	      this->sendMessageToPlugin (tmp, m1, m2);
+              this->sendMessageToPlugin (tmp, m1, m2);
 	  }
         }
         break;
@@ -174,8 +175,14 @@ int LXCMPlugModules::sendMessageToPlugin (LXCMPlugin* from,
     goto do_not_send_message;
   }
 
-  ret = plugin->receive (from, message);
-  ret = (ret) ? ret - 3 : 0;
+  try
+  {
+    plugin->receive (from, message);
+  }
+  catch (LXCMException e) {
+    log_message (LXCMLogger::DEBUG, e.getErrorMessage ().c_str ());
+    ret = -3;
+  }
 
 do_not_send_message:
   return ret;
