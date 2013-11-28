@@ -28,7 +28,6 @@ LXCMPlugModules::LXCMPlugModules ()
   : LXCMCoreModule ("LXCMPlugModules")
   , _libs ()
   , _modules ()
-  , _modulesLock ()
   , _modulesDirectory (CONFIG_CORE_DEFAULT_PLUGINS_DIRECTORY)
 {
   LXCMOptions* opts = LXCMOptions::getOptions ();
@@ -115,7 +114,6 @@ int LXCMPlugModules::exploreDir (std::string& dir)
 	  tmp->init ();
 
           this->_modules[name] = tmp;
-          this->_modulesLock[name] = false;
 	  this->_libs[name] = lib;
 
 	  if (name.compare ("plugin::Communication") == 0)
@@ -160,7 +158,7 @@ int LXCMPlugModules::sendMessageToPlugin (LXCMPlugin* from,
                                           std::string& to,
                                           std::string& message)
 {
-  int ret = -1;
+  int ret = 0;
   LXCMPlugin* plugin = NULL;
 
   if (!from)
@@ -176,15 +174,8 @@ int LXCMPlugModules::sendMessageToPlugin (LXCMPlugin* from,
     goto do_not_send_message;
   }
 
-  if (this->_modulesLock[to])
-  {
-    ret = -3;
-    goto do_not_send_message;
-  }
-
-  this->_modulesLock[to] = true;
-  plugin->receive (from, message);
-  this->_modulesLock[to] = false;
+  ret = plugin->receive (from, message);
+  ret = (ret) ? ret - 3 : 0;
 
 do_not_send_message:
   return ret;

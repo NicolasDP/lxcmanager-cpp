@@ -62,12 +62,13 @@ class LXCMPCommunication : public LXCMPlugin
      */
     void quit ();
 
-    void receive (LXCMPlugin*, std::string&);
+    int receive (LXCMPlugin*, std::string&);
 
   private:
     WSServer* _server;
     std::string _moduleName;
 //    std::deque<LXCMPConnection> _connections;
+    bool _lockMessage;
 };
 
 #endif /* !COMMUNICATION_HH_ */

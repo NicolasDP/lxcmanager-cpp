@@ -61,7 +61,6 @@ class LXCMPlugModules : public LXCMCoreModule
   private:
     std::map<std::string, void*> _libs;
     std::map<std::string, LXCMPlugin*> _modules;
-    std::map<std::string, bool> _modulesLock;
     std::string _modulesDirectory;
 };
 

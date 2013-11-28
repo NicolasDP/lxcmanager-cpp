@@ -51,7 +51,10 @@ class LXCMPEmpty : public LXCMPlugin
      */
     void quit ();
 
-    void receive (LXCMPlugin*, std::string&);
+    int receive (LXCMPlugin*, std::string&);
+
+  private:
+    bool _lockMessage;
 };
 
 #endif /* !EMPTY_HH_ */
