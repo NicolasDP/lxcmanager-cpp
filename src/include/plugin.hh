@@ -19,22 +19,29 @@
 # include "module.hh"
 # include "plugintools.hh"
 
+/*! @class LXCMPlugin
+ *
+ * @brief This is the Class that all plugin Must inherit. */
 class LXCMPlugin : public LXCMModule
 {
   public:
-    /*! @brief One of LXCMPlugin getter, it returns the version of the
-     * current plugin. Useful for program updates, debug and information
-     * logs.
+    /*! @brief constructor
      *
-     * @return it returns the plugin version (_version)
-     */
-    int	getVersion ();
+     * @param string is the plugin's name
+     * @param version is the plugin's version
+     * @param pt is the tools functions given by the core */
     LXCMPlugin (std::string string, int version, PluginTools const* pt)
       : LXCMModule (string)
       , _version (version)
       , _pluginTools (pt)
     {
     };
+    /*! @brief One of LXCMPlugin getter, it returns the version of the
+     * current plugin. Useful for program updates, debug and information
+     * logs.
+     *
+     * @return it returns the plugin version (_version) */
+    int	getVersion ();
 
   public:
     /*! @brief virtual interface that child must implement
@@ -59,12 +66,14 @@ class LXCMPlugin : public LXCMModule
      */
     virtual void quit () = 0;
 
-    /*! @Function to send a message */
-    virtual void receive (LXCMPlugin*, std::string&) = 0;
+    /*! @brief to send a message
+     * @param from is the pointer to the sender address (this)
+     * @param msg is the message */
+    virtual void receive (LXCMPlugin* from, std::string& msg) = 0;
 
   protected:
-    int	_version;
-    PluginTools const* _pluginTools;
+    int	_version; /*!< the version number */
+    PluginTools const* _pluginTools; /*!< the given tools */
 };
 
 #endif /* !PLUGIN_HH_ */

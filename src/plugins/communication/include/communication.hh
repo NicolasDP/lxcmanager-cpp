@@ -30,6 +30,8 @@
 typedef
 websocketpp::server<websocketpp::config::asio> WSServer;
 
+/*! @class LXCMPCommunication
+ * @brief Websocket Communication plugin */
 class LXCMPCommunication : public LXCMPlugin
 {
   public:

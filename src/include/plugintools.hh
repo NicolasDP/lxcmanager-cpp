@@ -18,9 +18,18 @@
 
 # include "logger.hh"
 
+/*! @struct PluginsTools
+ * @brief this structure will be given at the creation of each plugin in order
+ * to give them an interface to communicate with the core (and also with all of
+ * the plugins). */
 typedef
-struct PluginTools
+struct pluginTools
 {
+  /*! @brief log is the methode given to the plugins to send log message properly
+   * @param lvl is the log level
+   * @param fmt is the string format
+   * @param ... is the remaining argument to fill the format _fmt_ see (man 3
+   * fprintf)*/
   void (*log) (LXCMLogger::level lvl, char const* fmt, ...);
 }
 PluginTools;

@@ -26,21 +26,6 @@
  * a short cut for boost::program_options */
 namespace po = boost::program_options;
 
-/*!
- * @enum OptionsParseCode
- * it's the return code used to chose to leave the program (with an error or
- * not) or to continue the main execution */
-typedef
-enum OptionsParseCode
-{
-  ERR_NONE = 0x0, /*!< no error, continue */
-  ERR_HELP,       /*!< no error, but user requested for something else
-                   * which needs to leave without executing the program */
-  ERR_ERROR       /*!< an error occured, leave the program as soon as
-                   * possible */
-}
-OptionsParseCode;
-
 /* This include should not come before because module.hh needs the definition
  * of the OptionParseCode and the namespace po defined too */
 # include "coremodule.hh"
@@ -64,41 +49,39 @@ class LXCMOptions : public LXCMCoreModule
      *  deque. At the parsing time, the parseOptions methode will
      *  be call for each registered LXCModule.
      *
-     *  @param LXCModule*: the address of a LXCModule instance */
-    void addModule (LXCMCoreModule*);
+     *  @param module is the address of a LXCModule instance */
+    void addModule (LXCMCoreModule* module);
     /*! @brief addOption
      *  it adds an option in the boost::program_options
      *  description. This option doesn't expect an argement.
      *
-     *  @param char const*: the option string "long,s" where long
+     *  @param opt is the option string "long,s" where long
      *  is a long option (--long) and s is the associated shord
      *  option (-s).
-     *  @param char const*: the option description */
-    void addOption (char const*, char const*);
+     *  @param desc is the option description */
+    void addOption (char const* opt, char const* desc);
     /*! @brief addOption
      *  it does the same but with an argument required.
      *
-     *  @param char const*: the option string "long,s" where long
+     *  @param opt is the option string "long,s" where long
      *  is a long option (--long) and s is the associated shord
      *  option (-s).
-     *  @param po::value_semantic which defines the type of a
-     *  required argement. See boost::program_option for more
+     *  @param arg defines the type of a
+     *  required argument. See boost::program_option for more
      *  information.
-     *  @param char const*: the option's description */
-    void addOption (char const*, po::value_semantic const*, char const*);
+     *  @param desc is the option's description */
+    void addOption (char const* opt, po::value_semantic const* arg,
+                    char const* desc);
 
     /*! @brief parseOptions
      *  it parses all of the registered options from the registered
      *  module (see addOption and addModule functions).
      *
-     *  @param int const: the number of argument given in command
-     *  line option (argc).
-     *  @param char const* const* the argument array givent in
-     *  command line option (argv).
-     *
-     *  @return OptionsParseCode
-     *  see OptionsParseCode */
-    void parseOptions (int const, char const* const*);
+     *  @param argc is the number of argument given in command
+     *  line option.
+     *  @param argv is the argument array givent in
+     *  command line option. */
+    void parseOptions (int const argc, char const* const* argv);
     /*! @brief checkOptions (see LXCModule) */
     void checkOptions (po::variables_map&);
 
@@ -109,13 +92,10 @@ class LXCMOptions : public LXCMCoreModule
      * pattern */
     static LXCMOptions* _singleton;
   private:
-    /*! @brief see bosst::program_option */
-    po::options_description* _desc;
-    /*! @brief see bosst::program_option */
-    po::variables_map*       _vm;
+    po::options_description _desc;/*!< see bosst::program_option */
+    po::variables_map _vm;/*!< see bosst::program_option */
 
-    /*! @brief the instance of each registered LXCModule */
-    std::deque<LXCMCoreModule*>* _modules;
+    std::deque<LXCMCoreModule*> _modules; /*!< instance of each registered LXCModule */
 };
 
 #endif /* !LXCMOPTIONS_HH_ */

@@ -47,21 +47,30 @@ class LXCMPlugModules : public LXCMCoreModule
      * LXCMCoreModule. */
     void checkOptions (po::variables_map&);
 
-    static void sendMessage (LXCMPlugin*, char const*, char const*);
+    /*! @brief send a message to a module
+     * @param from is a pointer to the sender object instance (this)
+     * @param to is the module identifier
+     * @param msg is the message to send */
+    static void sendMessage (LXCMPlugin* from, char const* to, char const* msg);
 
   private:
     /*! @brief load modules from the path given in parameter
      * @return 0 on success or 1 on error */
     void exploreDir (std::string&);
-    void sendMessageToPlugin (LXCMPlugin*, std::string&, std::string&);
+    /*! @brief send a message to a plugin
+     * @param from is a pointer to the sender object instance (this)
+     * @param to is the Module identifier
+     * @param msg is the message */
+    void sendMessageToPlugin (LXCMPlugin* from, std::string& to,
+                              std::string& msg);
   private:
     /*! @brief the unique instant of this singleton */
     static LXCMPlugModules* _instance;
 
   private:
-    std::map<std::string, void*> _libs;
-    std::map<std::string, LXCMPlugin*> _modules;
-    std::string _modulesDirectory;
+    std::map<std::string, void*> _libs; /*!< the plugin's lib instances */
+    std::map<std::string, LXCMPlugin*> _modules; /*!< the plugin's instances */
+    std::string _modulesDirectory; /*!< the plugin's directory */
 };
 
 #endif /* !PLUGMODULES_HH_ */

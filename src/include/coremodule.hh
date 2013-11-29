@@ -29,14 +29,12 @@
  * class CoreFoo : public LXCMCoreModule
  * {
  *   public:
- *     CoreFoo ()
+ *     CoreFoo () : LXCMModule ("core::CoreFoo")
  *     {
  *       LXCMOptions* opts = LXCMOption::getOptions ()
  *       opts->addModule (this);
  *       opts->addOption ("foo,f", "useless option");
  *       opts->addOption ("bar", po::value<int>, "useless too");
- *
- *       this->_moduleName = "My name is CoreFoo";
  *     };
  *
  *     ~CoreFoo () {};
@@ -57,15 +55,18 @@
 class LXCMCoreModule : public LXCMModule
 {
   public:
-    /*! @brief virtual interface that son must implement
+    /*! @brief Virtual interface that son must implement.
+     *
      * It is use to handle the options it sets
      * If there is no options to handle, then this function does
      * nothing but must be implemented.
      *
-     * @param po::variables_map&: contains the list of options
+     * @param vm contains the list of options
      * given by the user (see libboost::program_options). */
-    virtual void checkOptions (po::variables_map&) = 0;
+    virtual void checkOptions (po::variables_map& vm) = 0;
 
+    /*! @brief constructor
+     * @param string is the name of the coremodule */
     LXCMCoreModule (std::string string) : LXCMModule (string) { };
 };
 

@@ -49,6 +49,10 @@ class LXCMModule
     {
       return this->_moduleName;
     }
+
+    /*! @brief Constructor
+     *
+     * @param string is the module name (i.e. identifier) */
     LXCMModule (std::string string) : _moduleName (string) { };
 
   private:

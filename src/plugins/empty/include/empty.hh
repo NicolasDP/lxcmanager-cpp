@@ -19,6 +19,8 @@
 # include "plugin.hh"
 # include "logger.hh"
 
+/*! @class LXCMPEmpty
+ * @brief a void plugin: for test and example only */
 class LXCMPEmpty : public LXCMPlugin
 {
   public:

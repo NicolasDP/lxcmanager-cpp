@@ -21,20 +21,15 @@ LXCMOptions* LXCMOptions::_singleton = NULL;
 
 LXCMOptions::LXCMOptions ()
   : LXCMCoreModule ("LXCMOptions")
+  , _desc ("Generic Options")
+  , _vm ()
+  , _modules ()
 {
-  this->_desc = new po::options_description ("Generic options");
-  this->_vm = new po::variables_map ();
-
-  this->_modules = new std::deque<LXCMCoreModule*> ();
-
-  this->_desc->add_options ()
-    ("help,h", "produce help message");
+  this->_desc.add_options () ("help,h", "produce help message");
 }
 
 LXCMOptions::~LXCMOptions ()
 {
-  delete this->_desc;
-  delete this->_vm;
 }
 
 LXCMOptions* LXCMOptions::getOptions ()
@@ -52,7 +47,7 @@ void LXCMOptions::checkOptions (po::variables_map& vm)
 {
   if (vm.count ("help"))
   {
-    std::cout << *this->_desc << std::endl;
+    std::cout << this->_desc << std::endl;
     throw LXCMException (__func__, __FILE__, __LINE__, 0);
   }
 }
@@ -61,18 +56,18 @@ void LXCMOptions::addModule (LXCMCoreModule* module)
 {
   if (module)
   {
-    this->_modules->push_back (module);
+    this->_modules.push_back (module);
   }
 }
 
 void LXCMOptions::addOption (char const* name, char const* desc)
 {
-  this->_desc->add_options () (name, desc);
+  this->_desc.add_options () (name, desc);
 }
 
 void LXCMOptions::addOption (char const* n, po::value_semantic const* v, char const* d)
 {
-  this->_desc->add_options () (n, v, d);
+  this->_desc.add_options () (n, v, d);
 }
 
 void LXCMOptions::parseOptions (int const argc, char const* const* argv)
@@ -82,8 +77,8 @@ void LXCMOptions::parseOptions (int const argc, char const* const* argv)
 
   try
   {
-    po::store (po::parse_command_line (argc, argv, *this->_desc), *this->_vm);
-    po::notify (*this->_vm);
+    po::store (po::parse_command_line (argc, argv, this->_desc), this->_vm);
+    po::notify (this->_vm);
   }
   catch (std::exception& e)
   {
@@ -91,14 +86,14 @@ void LXCMOptions::parseOptions (int const argc, char const* const* argv)
     throw LXCMException (__func__, __FILE__, __LINE__, EINVAL, e.what ());
   }
 
-  end = this->_modules->end ();
-  for (it = this->_modules->begin (); it != end; it++)
+  end = this->_modules.end ();
+  for (it = this->_modules.begin (); it != end; it++)
   {
     log_message (LXCMLogger::DEBUG,
                  "core option %s loaded", (*it)->moduleName ().c_str ());
     try
     {
-      (*it)->checkOptions (*this->_vm);
+      (*it)->checkOptions (this->_vm);
     }
     catch (LXCMException& e)
     {

@@ -57,13 +57,14 @@ class LXCMLogger : public LXCMCoreModule
      * be printed in the standard log output (std::clog) or in a file given by
      * the option command line (--log-file path/to/log).
      *
-     * @param level the level of this debug message
-     * @param std::string the log message */
-    static void log (level const, std::string const&);
+     * @param lvl is the level of this debug message
+     * @param msg is the log message */
+    static void log (level const lvl, std::string const& msg);
     /*! @brief checkOptions
      * it implements the virtual method defined in the
-     * LXCMCoreModule. */
-    void checkOptions (po::variables_map&);
+     * LXCMCoreModule.
+     * @param vm is the variable map which contains all of the given options */
+    void checkOptions (po::variables_map& vm);
 
   private:
     /*! @brief constructor */
