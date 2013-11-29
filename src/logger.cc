@@ -89,9 +89,8 @@ void LXCMLogger::checkOptions (po::variables_map& vm)
         break;
       case NUMBER_OF_LOG_LEVEL:
       default:
-        this->log (LXCMLogger::ERROR, "Log level not available");
-        throw LXCMException (__func__, __FILE__, __LINE__,
-                             EINVAL, "Log level not available");
+        log_message (LXCMLogger::ERROR, "Log level (%d) not available", lvl);
+        THROW_ERROR (EINVAL, "Log level not available");
     }
   }
 
@@ -107,8 +106,8 @@ void LXCMLogger::checkOptions (po::variables_map& vm)
     }
     catch (std::exception& e)
     {
-      this->log (LXCMLogger::ERROR, e.what ());
-      throw LXCMException (__func__, __FILE__, __LINE__, EINVAL, e.what ());
+      log_message (LXCMLogger::ERROR, "%s", e.what ());
+      THROW_ERROR (EINVAL, e.what ());
     }
   }
 }

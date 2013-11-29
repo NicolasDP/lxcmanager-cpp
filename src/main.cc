@@ -41,7 +41,6 @@ int main (int argc, char** argv)
   try
   {
     LXCMPlugModules::loadModules ();
-    LXCMPlugModules::sendMessage (NULL, "plugin::Empty", "Mon message");
   }
   catch (LXCMException& e)
   {

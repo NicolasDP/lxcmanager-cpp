@@ -32,6 +32,11 @@ include $(SCRIPTSDIR)/Makefile.functions
 #   required library
 LDFLAGS += -Wl,-Bstatic,-lboost_program_options -Wl,-Bdynamic -ldl
 
+ifeq ($(CONFIG_DEBUG), y)
+  CPPFLAGS += -g -ggdb3
+  LDFLAGS  += -g -ggdb3
+endif
+
 all: $(BUILDDIR)/$(CONFIG_PROJECT_NAME) modules
 
 modules:

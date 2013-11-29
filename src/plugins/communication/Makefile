@@ -27,6 +27,11 @@ CPPFLAGS += -fPIC
 
 LDFLAGS += -shared -lboost_system
 
+ifeq ($(CONFIG_DEBUG), y)
+  CPPFLAGS += -g -ggdb3
+  LDFLAGS  += -g -ggdb3
+endif
+
 all: $(MODULENAME)
 	@true
 

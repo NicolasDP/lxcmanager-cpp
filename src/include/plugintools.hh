@@ -18,6 +18,8 @@
 
 # include "logger.hh"
 
+class LXCMPlugin;
+
 /*! @struct PluginsTools
  * @brief this structure will be given at the creation of each plugin in order
  * to give them an interface to communicate with the core (and also with all of
@@ -31,6 +33,7 @@ struct pluginTools
    * @param ... is the remaining argument to fill the format _fmt_ see (man 3
    * fprintf)*/
   void (*log) (LXCMLogger::level lvl, char const* fmt, ...);
+  void (*send_message) (LXCMPlugin* from, char const* to, char const* msg);
 }
 PluginTools;
 

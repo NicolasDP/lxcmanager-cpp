@@ -74,6 +74,7 @@ static PluginTools const plugTools =
 {
   /* defined in include/logger.hh */
   .log = log_message,
+  .send_message = send_message,
 };
 
 void LXCMPlugModules::exploreDir (std::string& dir)
@@ -137,10 +138,7 @@ void LXCMPlugModules::exploreDir (std::string& dir)
           }
           catch (LXCMException& e)
           {
-            std::cout << __FILE__ << ":" << __LINE__ << " POKE" << std::endl;
-            throw LXCMException (e.getErrorMessage (),
-                                 __func__, __FILE__, __LINE__,
-                                 e.getCode ());
+            THROW_FORWARD_ERROR (e);
           }
         }
         break;
@@ -153,7 +151,7 @@ void LXCMPlugModules::exploreDir (std::string& dir)
   else
   {
     log_message (LXCMLogger::ERROR, "can't open directory: %s", dir.c_str ());
-    throw LXCMException (__func__, __FILE__, __LINE__, errno, dir.c_str ());
+    THROW_ERROR (errno, dir.c_str ());
   }
 }
 
@@ -170,21 +168,20 @@ void LXCMPlugModules::sendMessageToPlugin (LXCMPlugin* from,
 {
   LXCMPlugin* plugin = NULL;
 
-#if 0
   if (!from)
   {
-    throw LXCMException (__func__, __FILE__, __LINE__,
-                         EINVAL, "'from' value is NULL");
+    THROW_ERROR (EINVAL, "someone tries to send an anonymous message");
   }
-#endif
 
   plugin = this->_modules[to];
   if (!plugin)
   {
     char message[256];
     memset (message, 0, sizeof (message));
-    snprintf (message, sizeof (message), "no module named %s", to.c_str ());
-    throw LXCMException (__func__, __FILE__, __LINE__, EINVAL, message);
+    snprintf (message, sizeof (message),
+              "%s tried to send a message to unknown module: %s",
+              from->moduleName ().c_str (), to.c_str ());
+    THROW_ERROR (EINVAL, message);
   }
 
   try
@@ -194,9 +191,7 @@ void LXCMPlugModules::sendMessageToPlugin (LXCMPlugin* from,
   catch (LXCMException& e)
   {
     log_message (LXCMLogger::DEBUG, e.getErrorMessage ().c_str ());
-    throw LXCMException (e.getErrorMessage (),
-                         __func__, __FILE__, __LINE__,
-                         e.getCode ());
+    THROW_FORWARD_ERROR (e);
   }
 }
 
@@ -212,10 +207,13 @@ void LXCMPlugModules::sendMessage (LXCMPlugin* from,
   }
   catch (LXCMException& e)
   {
-    throw LXCMException (e.getErrorMessage (),
-                         __func__, __FILE__, __LINE__,
-                         e.getCode ());
+    THROW_FORWARD_ERROR (e);
   }
+}
+
+void send_message (LXCMPlugin* from, char const* to, char const* msg)
+{
+  LXCMPlugModules::sendMessage (from, to, msg);
 }
 
 /* ----/ Plugin Loading /--------------------------------------------------- */

@@ -1,3 +1,18 @@
+/* This file is part of LXCManager.
+ *
+ * LXCManager is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LXCManager is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LXCManager.  If not, see <http://www.gnu.org/licenses/>. */
+
 #ifndef EXCEPTIONS_HH_
 # define EXCEPTIONS_HH_
 
@@ -7,6 +22,30 @@
 # include <exception>
 # include <string>
 # include <sstream>
+
+# include "config.hh"
+
+# define THROW_ERROR_CODE(code)                               \
+  do {                                                        \
+    throw LXCMException (__func__, __FILE__, __LINE__, code); \
+  } while (0)
+
+# define THROW_ERROR(code, message)                                    \
+  do {                                                                 \
+    throw LXCMException (__func__, __FILE__, __LINE__, code, message); \
+  } while (0)
+
+# if defined (CONFIG_DEBUG) && CONFIG_DEBUG
+#  define THROW_FORWARD_ERROR(e)                         \
+    do {                                                 \
+      throw LXCMException (e.getErrorMessage (),         \
+                           __func__, __FILE__, __LINE__, \
+                           e.getCode ());                \
+    } while (0)
+# else
+#  define THROW_FORWARD_ERROR(e)                         \
+   THROW_ERROR (e.getCode (), e.getMessage ())
+#endif
 
 /*! @class LXCMException
  *
@@ -150,10 +189,15 @@ class LXCMException: public std::exception
         oss << this->_upper << std::endl << "[FORWARD] ";
       }
 
+#if defined (CONFIG_DEBUG) && CONFIG_DEBUG
       oss << "[" << this->_function << "]"
           << "[" << this->_file << ":" << this->_line << "]"
           << "[" << strerror (this->_code) << "] "
           << this->_message;
+#else
+      oss << "[" << strerror (this->_code) << "] "
+          << this->_message;
+#endif
 
       return oss.str ();
     };
@@ -162,6 +206,12 @@ class LXCMException: public std::exception
     int getCode (void) const throw ()
     {
       return this->_code;
+    };
+
+    /*! @brief return the message */
+    char const* getMessage (void) const throw ()
+    {
+      return this->_message.c_str ();
     };
   private:
     bool _have_upper;

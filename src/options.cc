@@ -48,7 +48,7 @@ void LXCMOptions::checkOptions (po::variables_map& vm)
   if (vm.count ("help"))
   {
     std::cout << this->_desc << std::endl;
-    throw LXCMException (__func__, __FILE__, __LINE__, 0);
+    THROW_ERROR_CODE (0);
   }
 }
 
@@ -83,7 +83,7 @@ void LXCMOptions::parseOptions (int const argc, char const* const* argv)
   catch (std::exception& e)
   {
     log_message (LXCMLogger::ERROR, e.what ());
-    throw LXCMException (__func__, __FILE__, __LINE__, EINVAL, e.what ());
+    THROW_ERROR (EINVAL, e.what ());
   }
 
   end = this->_modules.end ();
@@ -98,8 +98,7 @@ void LXCMOptions::parseOptions (int const argc, char const* const* argv)
     catch (LXCMException& e)
     {
       log_message (LXCMLogger::DEBUG, e.what ());
-      throw LXCMException (e.getErrorMessage (),
-                           __func__, __FILE__, __LINE__, e.getCode ());
+      THROW_FORWARD_ERROR (e);
     }
   }
 }

@@ -73,4 +73,6 @@ class LXCMPlugModules : public LXCMCoreModule
     std::string _modulesDirectory; /*!< the plugin's directory */
 };
 
+void send_message (LXCMPlugin* from, char const* to, char const* msg);
+
 #endif /* !PLUGMODULES_HH_ */

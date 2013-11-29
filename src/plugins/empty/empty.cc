@@ -45,8 +45,7 @@ void LXCMPEmpty::receive (LXCMPlugin* from, std::string& message)
 {
   if (this->_lockMessage)
   {
-    throw LXCMException (__func__, __FILE__, __LINE__,
-                         EBUSY, "message already locked");
+    THROW_ERROR (EBUSY, "message already locked");
   }
 
   if (from)

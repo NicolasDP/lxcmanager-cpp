@@ -54,7 +54,7 @@ void LXCMVersion::checkOptions (po::variables_map& vm)
 << "under certain conditions: see http://www.gnu.org/licenses/gpl.html."
    << std::endl;
 
-    throw LXCMException (__func__, __FILE__, __LINE__, 0);
+    THROW_ERROR_CODE (0);
   }
 }
 

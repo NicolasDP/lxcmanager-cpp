@@ -12,6 +12,11 @@ config PROJECT_VERSION
   prompt "The project version"
   help
     This is the project version. You should not modify it yourself.
+
+config DEBUG
+  bool
+  default n
+  prompt "enable debug symbol (for gdb and/or debug message output)"
 endmenu
 
 source ./src/Kconfig

@@ -15,6 +15,7 @@
 
 #include "communication.hh"
 #include "exceptions.hh"
+#include "modules.hh"
 
 LXCMPCommunication::LXCMPCommunication (PluginTools* pt)
   : LXCMPlugin ("plugin::Communication", 0x0001, pt)
@@ -39,6 +40,7 @@ void LXCMPCommunication::init ()
   this->_server->set_message_handler (&on_message);
 
   this->_server->init_asio ();
+  this->_pluginTools->send_message (this, "plugin::Empty2", "Mon message");
 }
 
 void LXCMPCommunication::start ()
@@ -59,8 +61,7 @@ void LXCMPCommunication::receive (LXCMPlugin* from, std::string& message)
 {
   if (this->_lockMessage)
   {
-    throw LXCMException (__func__, __FILE__, __LINE__,
-                         EBUSY, "message already locked");
+    THROW_ERROR (EBUSY, "message already locked");
   }
 
   if (from)
