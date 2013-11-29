@@ -17,13 +17,13 @@ DEPENDANCIES
  link them automatically.
  **To launch the dependancies building, use the following command:**
 
-    42sh$ make all
+    42sh$ make init [-j8]
 
  The first time you build the project, the build system will download the last
  source version of each dependancy, build them and install then in the *lib*
  subdirectory. You can update them by using the following command:
 
-    42sh$ make update-repos
+    42sh$ make update-repos [-j8]
 
 CONFIGURATION
 -------------
@@ -45,7 +45,7 @@ COMPILING
  Now, the project's dependancies are installed in the build system. You can use
  the usual *Makefile targets* to work with the project:
 
-    42sh$ make all
+    42sh$ make all [-j8]
 
 DOCUMENTATION
 =============

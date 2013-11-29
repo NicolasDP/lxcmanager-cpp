@@ -5,17 +5,17 @@ include ../Makefile.var
 include $(SCRIPTSDIR)/Makefile.functions
 
 boost:
-	PROJECTDIR=$(PROJECTDIR) \
+	$(V)PROJECTDIR=$(PROJECTDIR) \
 	    $(SCRIPTSDIR)/handle_library_dependancies.sh init $@
 websocket:
-	PROJECTDIR=$(PROJECTDIR) \
+	$(V)PROJECTDIR=$(PROJECTDIR) \
 	    $(SCRIPTSDIR)/handle_library_dependancies.sh init $@
 kconfig:
-	PROJECTDIR=$(PROJECTDIR) \
+	$(V)PROJECTDIR=$(PROJECTDIR) \
 	    $(SCRIPTSDIR)/handle_library_dependancies.sh init $@
 
 build-%: %
-	PROJECTDIR=$(PROJECTDIR) \
+	$(V)PROJECTDIR=$(PROJECTDIR) \
 	    $(SCRIPTSDIR)/handle_library_dependancies.sh build $<
 
 build: build-boost build-websocket build-kconfig
@@ -24,7 +24,7 @@ init: .repos_initialized
 	@true
 
 .repos_initialized:
-	$(V)make $(MAKEOPT) build
+	$(V)$(MAKE) $(MAKEOPT) build
 	$(V)touch $@
 
 clean:

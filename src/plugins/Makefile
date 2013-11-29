@@ -17,7 +17,10 @@ empty:
 	$(V)$(MAKE) $(MAKEOPT) -C $@ all
 
 all: $(MODULE_LIST_y)
-	@true
+	@echo ""
+	@echo "  PLUGINS STORED AT:"
+	@echo "  " $(MODULESDIR)
+	@echo ""
 
 clean:
 	$(V)for module in $(MODULE_LIST_y) $(MODULE_LIST_) $(MODULE_LIST_n); do \

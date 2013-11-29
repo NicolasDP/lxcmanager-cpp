@@ -93,7 +93,9 @@ $(REPOSDIR):
 $(BUILDCONFIGDIR):
 	$(V)mkdir -p $@
 
-INIT_REPOS: $(REPOSDIR) $(BUILDCONFIGDIR)
+init: INIT_REPOS
+
+INIT_REPOS: $(REPOSDIR) $(BUILDCONFIGDIR) INIT_ENV
 	$(V)$(MAKE) $(MAKEOPT) -C $(REPOSDIR) init
 
 update-repos:
@@ -123,7 +125,9 @@ defconfig: INIT_REPOS
 	$(V)$(KCONFIG_OPTIONS) $(SCRIPTSDIR)/kconfig/bin/kconfig-conf --silentoldconfig Kconfig
 
 .config:
-	@echo "ERROR: no .config file. Use make menuconfig OR make defconfig"
+	@echo ""
+	@echo " First: use make menuconfig OR make defconfig"
+	@echo ""
 	@exit 1
 
 help:
@@ -153,7 +157,7 @@ help:
 
 # DOCUMENTATION
 .PHONY: doc
-doc: DEPENDANCES
+doc: INIT_ENV
 	$(V)$(MAKE) $(MAKEOPT) -C $(DOCDIR) doc
 
 # RELEASING
