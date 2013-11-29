@@ -44,9 +44,16 @@ void LXCMVersion::checkOptions (po::variables_map& vm)
 {
   if (vm.count ("version"))
   {
-    std::cout << CONFIG_PROJECT_NAME << " version "
-      << CONFIG_PROJECT_VERSION
-      <<  std::endl;
+    std::cout
+<< CONFIG_PROJECT_NAME << " (" << CONFIG_PROJECT_VERSION << ") "
+<< "Copyright (C) 2013 Nicolas DI PRIMA & Dorian ZACCARIA" << std::endl
+<< "This program comes with ABSOLUTELY NO WARRANTY; for details read GPLv3."
+   << std::endl
+<< "This is free software, and you are welcome to redistribute it"
+   << std::endl
+<< "under certain conditions: see http://www.gnu.org/licenses/gpl.html."
+   << std::endl;
+
     throw LXCMException (__func__, __FILE__, __LINE__, 0);
   }
 }
