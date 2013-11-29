@@ -40,7 +40,7 @@ endif
 all: $(BUILDDIR)/$(CONFIG_PROJECT_NAME) modules
 
 modules:
-	$(V)make $(MAKEOPT) -C plugins all
+	$(V)$(MAKE) $(MAKEOPT) -C plugins all
 
 %.o: %.cc
 	@echo " CPP" $@

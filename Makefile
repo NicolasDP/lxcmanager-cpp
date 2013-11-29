@@ -94,15 +94,15 @@ $(BUILDCONFIGDIR):
 	$(V)mkdir -p $@
 
 INIT_REPOS: $(REPOSDIR) $(BUILDCONFIGDIR)
-	$(V)make $(MAKEOPT) -C $(REPOSDIR) init
+	$(V)$(MAKE) $(MAKEOPT) -C $(REPOSDIR) init
 
 update-repos:
-	$(V)make $(MAKEOPT) -C $(REPOSDIR) build
+	$(V)$(MAKE) $(MAKEOPT) -C $(REPOSDIR) build
 
 # BUILDING
 
 all-build: DEPENDANCES INIT_REPOS .config $(CONFIG_HEADER_FILE)
-	$(V)make $(MAKEOPT) -C $(SOURCEDIR) all
+	$(V)$(MAKE) $(MAKEOPT) -C $(SOURCEDIR) all
 
 DEPENDANCES: INIT_ENV
 	$(V)for package in $(PACKAGES_NEEDED); do \
@@ -154,7 +154,7 @@ help:
 # DOCUMENTATION
 .PHONY: doc
 doc: DEPENDANCES
-	$(V)make $(MAKEOPT) -C $(DOCDIR) doc
+	$(V)$(MAKE) $(MAKEOPT) -C $(DOCDIR) doc
 
 # RELEASING
 
@@ -167,18 +167,18 @@ tar.bz2:
 # CLEANING
 
 clean: $(SOURCEDIR) INIT_ENV
-	$(V)make $(MAKEOPT) -C $(SOURCEDIR) $@
-	$(V)make $(MAKEOPT) -C $(REPOSDIR) $@
-	$(V)make $(MAKEOPT) -C $(DOCDIR) $@
+	$(V)$(MAKE) $(MAKEOPT) -C $(SOURCEDIR) $@
+	$(V)$(MAKE) $(MAKEOPT) -C $(REPOSDIR) $@
+	$(V)$(MAKE) $(MAKEOPT) -C $(DOCDIR) $@
 	$(V)$(call remove_file,$(PROJECTDIR)/.config)
 	$(V)$(call remove_file,$(PROJECTDIR)/.config.old)
 	$(V)$(call remove_file,$(BUILDDIR)/$(CONFIG_PROJECT_NAME))
 	$(V)$(call remove_file,$(CONFIG_HEADER_FILE))
 
 distclean: clean
-	$(V)make $(MAKEOPT) -C $(SOURCEDIR) $@
-	$(V)make $(MAKEOPT) -C $(REPOSDIR) $@
-	$(V)make $(MAKEOPT) -C $(DOCDIR) $@
+	$(V)$(MAKE) $(MAKEOPT) -C $(SOURCEDIR) $@
+	$(V)$(MAKE) $(MAKEOPT) -C $(REPOSDIR) $@
+	$(V)$(MAKE) $(MAKEOPT) -C $(DOCDIR) $@
 	$(V)$(call remove_file,$(TARBALL))
 	$(V)$(call remove_dir,$(LIBSDIR))
 	$(V)$(call remove_dir,$(BUILDDIR))
