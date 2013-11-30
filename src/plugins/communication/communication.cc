@@ -40,7 +40,6 @@ void LXCMPCommunication::init ()
   this->_server->set_message_handler (&on_message);
 
   this->_server->init_asio ();
-  this->_pluginTools->send_message (this, "plugin::Empty2", "Mon message");
 }
 
 void LXCMPCommunication::start ()

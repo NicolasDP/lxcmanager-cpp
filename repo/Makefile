@@ -14,11 +14,15 @@ kconfig:
 	$(V)PROJECTDIR=$(PROJECTDIR) \
 	    $(SCRIPTSDIR)/handle_library_dependancies.sh init $@
 
+libjson:
+	$(V)PROJECTDIR=$(PROJECTDIR) \
+	    $(SCRIPTSDIR)/handle_library_dependancies.sh init $@
+
 build-%: %
 	$(V)PROJECTDIR=$(PROJECTDIR) \
 	    $(SCRIPTSDIR)/handle_library_dependancies.sh build $<
 
-build: build-boost build-websocket build-kconfig
+build: build-boost build-websocket build-kconfig build-libjson
 
 init: .repos_initialized
 	@true

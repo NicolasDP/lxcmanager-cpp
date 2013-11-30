@@ -11,7 +11,10 @@ SOURCES = \
     modules.cc \
     options.cc \
     version.cc \
-    logger.cc
+    logger.cc \
+    lxcmjson.cc \
+    lxcmjsonparser.cc \
+    lxcmconfigfile.cc
 
 # DO NOT EDIT THE REMAINING FILE
 
@@ -30,7 +33,7 @@ include $(SCRIPTSDIR)/Makefile.functions
 #   TODO: If you want to add a specific boost library do not forget to update
 #   the handle_library_scripts.sh (in $(SCRIPTSDIR)) in order to build the
 #   required library
-LDFLAGS += -Wl,-Bstatic,-lboost_program_options -Wl,-Bdynamic -ldl
+LDFLAGS += -Wl,-Bstatic,-lboost_program_options,-ljson -Wl,-Bdynamic -ldl
 
 ifeq ($(CONFIG_DEBUG), y)
   CPPFLAGS += -g -ggdb3

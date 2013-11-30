@@ -13,7 +13,7 @@ else
 fi
 
 REPOS_FOLDER=${PROJECTDIR}/repo
-REPOS_LIST="boost websocket kconfig"
+REPOS_LIST="boost websocket kconfig libjson"
 
 BOOST_LIBRARIES="program_options,system"
 BOOST_OPTIONS="threading=multi runtime-link=shared"
@@ -45,6 +45,13 @@ clone_repository()
             if [ ! -d ${REPOS_FOLDER}/kconfig ]; then
                 git clone git://ymorin.is-a-geek.org/kconfig-frontends \
                           ${REPOS_FOLDER}/kconfig
+                RETURN_VALUE=${?}
+            fi
+            ;;
+        libjson)
+            if [ ! -d ${REPOS_FOLDER}/libjson ]; then
+                git clone https://github.com/NicolasDP/libjson.git \
+                          ${REPOS_FOLDER}/libjson
                 RETURN_VALUE=${?}
             fi
             ;;
@@ -82,6 +89,10 @@ update_repository()
                 RETURN_VALUE=${?}
                 ;;
             kconfig)
+                git pull
+                RETURN_VALUE=${?}
+                ;;
+            libjson)
                 git pull
                 RETURN_VALUE=${?}
                 ;;
@@ -128,6 +139,10 @@ build_repository()
                 ./bootstrap && ./configure --prefix=${PROJECTDIR}/scripts/kconfig \
                       --disable-gconf --disable-qconf --disable-nconf \
                       --enable-mconf && make install
+                RETURN_VALUE=${?}
+                ;;
+            libjson)
+                make all && make PREFIX=${PROJECTDIR}/lib install
                 RETURN_VALUE=${?}
                 ;;
             *)
