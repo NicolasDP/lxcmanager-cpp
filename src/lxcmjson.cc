@@ -114,8 +114,16 @@ int tree_append (void* structure,
   return 0;
 }
 
-void LXCMJsonVal::print (std::ostream& os) const
+void LXCMJsonVal::print (unsigned const int indent, std::ostream& os) const
 {
+  std::string base ("  ");
+  std::string prefix ("");
+
+  for (unsigned int i = 0; i < indent; i++)
+  {
+    prefix += base;
+  }
+
   switch (this->_type)
   {
   case JSON_OBJECT_BEGIN:
@@ -123,13 +131,13 @@ void LXCMJsonVal::print (std::ostream& os) const
       std::map<std::string, LXCMJsonVal*>::const_iterator it;
       std::map<std::string, LXCMJsonVal*>::const_iterator end;
       end = this->_object.cend ();
-      os << "Object Begin (" << this->_object.size () << ")" << std::endl;
+      os << prefix << "Object Begin (" << this->_object.size () << ")" << std::endl;
       for (it = this->_object.begin (); it != end; it++)
       {
-	os << "Key (" << it->first << ")" << std::endl;
-        os << (*(it->second));
+        os << prefix << base << "Key (" << it->first << ")" << std::endl;
+        it->second->print (indent + 1, os);
       }
-      os << "Object End" << std::endl;
+      os << prefix << "Object End" << std::endl;
     }
     break;
   case JSON_ARRAY_BEGIN:
@@ -137,31 +145,31 @@ void LXCMJsonVal::print (std::ostream& os) const
       std::deque<LXCMJsonVal*>::const_iterator it;
       std::deque<LXCMJsonVal*>::const_iterator end;
       end = this->_array.cend ();
-      os << "Array Begin (" << this->_array.size () << ")" << std::endl;
+      os << prefix << "Array Begin (" << this->_array.size () << ")" << std::endl;
       for (it = this->_array.cbegin (); it != end; it++)
       {
-        os << *(*it);
+        (*it)->print (indent + 1, os);
       }
-      os << "Array End" << std::endl;
+      os << prefix << "Array End" << std::endl;
     }
     break;
   case JSON_FALSE:
-    os << "constant: false" << std::endl;;
+    os << prefix << "constant: false" << std::endl;;
     break;
   case JSON_TRUE:
-    os << "constant: true" << std::endl;;
+    os << prefix << "constant: true" << std::endl;;
     break;
   case JSON_NULL:
-    os << "constant: null" << std::endl;;
+    os << prefix << "constant: null" << std::endl;;
     break;
   case JSON_INT:
-    os << "integer: " << this->_data << std::endl;
+    os << prefix << "integer: " << this->_data << std::endl;
     break;
   case JSON_STRING:
-    os << "string: " << this->_data << std::endl;
+    os << prefix << "string: " << this->_data << std::endl;
     break;
   case JSON_FLOAT:
-    os << "float: " << this->_data << std::endl;
+    os << prefix << "float: " << this->_data << std::endl;
     break;
   default:
     break;
@@ -170,6 +178,6 @@ void LXCMJsonVal::print (std::ostream& os) const
 
 std::ostream& operator<< (std::ostream& os, LXCMJsonVal const& obj)
 {
-  obj.print (os);
+  obj.print (0, os);
   return os;
 }

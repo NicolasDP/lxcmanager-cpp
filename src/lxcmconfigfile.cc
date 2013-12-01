@@ -16,6 +16,7 @@
 #include "lxcmconfigfile.hh"
 #include "exceptions.hh"
 #include "lxcmjsonparser.hh"
+#include <fstream>
 
 LXCMConfigFile* LXCMConfigFile::_singleton = NULL;
 
@@ -48,8 +49,36 @@ void LXCMConfigFile::checkOptions (po::variables_map& vm)
   {
     std::string file (vm["config"].as<std::string> ());
     LXCMJsonParser tmp;
+    std::ifstream ifs;
+    LXCMJsonVal* dom;
+    char line_buffer[128];
+    unsigned int line_counter = 0;
 
-    tmp.parseFile (file);
+    ifs.open (file.c_str (), std::ifstream::in);
+
+    do
+    {
+      memset (line_buffer, 0, sizeof (line_buffer));
+      ifs.getline (line_buffer, sizeof (line_buffer) - 1);
+      try
+      {
+	std::string theLine (line_buffer);
+        tmp.parse (line_counter++, theLine);
+      }
+      catch (LXCMException& e)
+      {
+        THROW_FORWARD_ERROR (e);
+      }
+    }
+    while (ifs.good ());
+
+    dom = tmp.getDom ();
+    if (dom)
+    {
+      std::cout << *dom;
+    }
+
+    ifs.close ();
   }
 }
 

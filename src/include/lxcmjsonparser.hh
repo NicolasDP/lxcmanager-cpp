@@ -26,13 +26,12 @@ class LXCMJsonParser
     LXCMJsonParser ();
     ~LXCMJsonParser ();
 
-    void parse (std::string& s);
-    void parseFile (std::string& filename);
-#if 0
-    void parse (char const c);
-    void parse (char const* s);
-#endif
+//    void parse (char const c);
+    void parse (unsigned int const line,
+                char const* s, unsigned int const size);
+    void parse (unsigned int const line, std::string& s);
 
+    LXCMJsonVal* getDom (void);
   private:
     json_parser _parser;
     json_parser_dom _dom;

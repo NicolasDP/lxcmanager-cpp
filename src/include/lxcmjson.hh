@@ -32,7 +32,7 @@ class LXCMJsonVal
 
     ~LXCMJsonVal ();
 
-    void print (std::ostream& os) const;
+    void print (unsigned int const indent, std::ostream& os) const;
 
     int _type;
 

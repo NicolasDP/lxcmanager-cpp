@@ -25,8 +25,10 @@ LXCMJsonParser::LXCMJsonParser ()
 
   json_config config;
   memset (&config, 0, sizeof (config));
-  config.allow_c_comments = 0;
-  config.allow_yaml_comments = 1;
+  config.max_nesting = 0;
+  config.max_data = 0;
+  config.allow_c_comments = 1;
+  config.allow_yaml_comments = 0;
   json_parser_init (&this->_parser, &config,
                     json_parser_dom_callback, &this->_dom);
 }
@@ -37,11 +39,13 @@ LXCMJsonParser::~LXCMJsonParser ()
   json_parser_dom_free (&this->_dom);
 }
 
-void LXCMJsonParser::parse (std::string& s)
+void LXCMJsonParser::parse (unsigned int const line,
+                            char const* s, unsigned int const size)
 {
   int ret;
+  unsigned int col = 0;
 
-  ret = json_parser_string (&this->_parser, s.c_str (), s.size (), NULL);
+  ret = json_parser_string (&this->_parser, s, size, &col);
 
   switch (ret)
   {
@@ -49,42 +53,25 @@ void LXCMJsonParser::parse (std::string& s)
   case 3:
     break;
   case 7:
-    THROW_ERROR (EINVAL, "C-style comment in json not allowed");
+    THROW_ERROR (EINVAL, "yaml-style comment in json not allowed");
     break;
   default:
-    std::string msg ("Error with: ");
-    msg += s;
+    char msg[256];
+    memset (msg, 0, sizeof (msg));
+    snprintf (msg, sizeof (msg),
+              "Error line (%u) caracter (%u) line (%s)", line, col, s);
     std::cout << "Error code: " << ret << std::endl;
-    THROW_ERROR (EBADMSG, msg.c_str ());
+    THROW_ERROR (EINVAL, msg);
     break;
   }
 }
 
-void LXCMJsonParser::parseFile (std::string& filename)
+LXCMJsonVal* LXCMJsonParser::getDom (void)
 {
-  std::ifstream ifs;
-  std::string word;
-  LXCMJsonVal* dom;
+  return (LXCMJsonVal*)this->_dom.root_structure;
+}
 
-  ifs.open (filename.c_str (), std::ifstream::in);
-
-  do
-  {
-    ifs >> word;
-    try
-    {
-      this->parse (word);
-    }
-    catch (LXCMException& e)
-    {
-      THROW_FORWARD_ERROR (e);
-    }
-  }
-  while (ifs.good ());
-
-  dom = (LXCMJsonVal*)this->_dom.root_structure;
-  if (dom)
-    std::cout << *dom;
-
-  ifs.close ();
+void LXCMJsonParser::parse (unsigned int const line, std::string& s)
+{
+  this->parse (line, s.c_str (), s.size ());
 }
