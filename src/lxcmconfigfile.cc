@@ -22,6 +22,7 @@ LXCMConfigFile* LXCMConfigFile::_singleton = NULL;
 
 LXCMConfigFile::LXCMConfigFile ()
   : LXCMCoreModule ("LXCMConfigFile")
+  , _dom (NULL)
 {
   LXCMOptions* opts = LXCMOptions::getOptions ();
 
@@ -45,44 +46,55 @@ void LXCMConfigFile::init ()
 
 void LXCMConfigFile::checkOptions (po::variables_map& vm)
 {
+  std::string filename (CONFIG_DEFAULT_CONFIGFILE);
+  LXCMJsonParser tmp;
+  std::ifstream ifs;
+  char line_buffer[256];
+  unsigned int line_counter = 0;
+
   if (vm.count ("config"))
   {
-    std::string file (vm["config"].as<std::string> ());
-    LXCMJsonParser tmp;
-    std::ifstream ifs;
-    LXCMJsonVal* dom;
-    char line_buffer[128];
-    unsigned int line_counter = 0;
+    filename = (vm["config"].as<std::string> ());
+  }
 
-    ifs.open (file.c_str (), std::ifstream::in);
+  ifs.open (filename.c_str (), std::ifstream::in);
 
-    do
+  do
+  {
+    memset (line_buffer, 0, sizeof (line_buffer));
+    ifs.getline (line_buffer, sizeof (line_buffer) - 1);
+    try
     {
-      memset (line_buffer, 0, sizeof (line_buffer));
-      ifs.getline (line_buffer, sizeof (line_buffer) - 1);
-      try
-      {
-	std::string theLine (line_buffer);
-        tmp.parse (line_counter++, theLine);
-      }
-      catch (LXCMException& e)
-      {
-        THROW_FORWARD_ERROR (e);
-      }
+      std::string theLine (line_buffer);
+      tmp.parse (line_counter++, theLine);
     }
-    while (ifs.good ());
-
-    dom = tmp.getDom ();
-    if (dom)
+    catch (LXCMException& e)
     {
-      std::cout << *dom;
+      THROW_FORWARD_ERROR (e);
     }
+  }
+  while (ifs.good ());
 
-    ifs.close ();
+  this->_dom = tmp.getDom ();
+  this->print (std::cout);
+  ifs.close ();
+}
+
+void LXCMConfigFile::print (std::ostream& os) const
+{
+  if (this->_dom)
+  {
+    os << *this->_dom;
   }
 }
 
-void __attribute__ ((constructor)) coremodule_init_configfile (void)
+std::ostream& operator<< (std::ostream& os, LXCMConfigFile const& obj)
+{
+  obj.print (os);
+  return os;
+}
+
+static void __attribute__ ((constructor)) coremodule_init_configfile (void)
 {
   LXCMConfigFile::init ();
 }

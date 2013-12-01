@@ -18,6 +18,8 @@
 
 # include "options.hh"
 
+# include "lxcmjson.hh"
+
 /*!
  * @class LXCMConfigFile
  *
@@ -25,8 +27,7 @@
 class LXCMConfigFile : public LXCMCoreModule
 {
   public:
-    /*!
-     * @brief init
+    /*! @brief init
      * As LXCMConfigFile is a singleton design pattern, this is the
      * main function to initialize the unique instance of this
      * Class. */
@@ -34,17 +35,25 @@ class LXCMConfigFile : public LXCMCoreModule
     /*! @brief Destructor */
     ~LXCMConfigFile ();
 
-    /*!
-     * @brief checkOptions
+    /*! @brief checkOptions
      * it implements the virtual method defined in the
      * LXCMCoreModule. */
      void checkOptions (po::variables_map&);
+
+     /*! @brief print the Tree
+      * @param os the output stream */
+     void print (std::ostream& os) const;
 
   private:
     /*! @brief Constructor */
     LXCMConfigFile ();
     /*!< @brief the unique instance of this Class */
     static LXCMConfigFile* _singleton;
+
+  private:
+    LXCMJsonVal* _dom;
 };
+
+std::ostream& operator<< (std::ostream& os, LXCMConfigFile const& obj);
 
 #endif /* !LXCMConfigFile_HH_ */
