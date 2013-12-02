@@ -7,7 +7,7 @@ include $(SCRIPTSDIR)/Makefile.functions
 # Source files
 SOURCES = \
     communication.cc \
-    $(SOURCEDIR)/lxcmjson.cc
+    lxcmjson.cc
 
 # DO NOT EDIT THE REMAINING FILE
 OBJS	= $(SOURCES:.cc=.o)
@@ -36,6 +36,19 @@ endif
 all: $(MODULENAME)
 	@true
 
+lxcmjson.cc:
+	@ln -s $(SOURCEDIR)/$@ $@
+
+lxcmjson.o: lxcmjson.cc
+	@echo " CPP" $@
+	@g++ -c $(CPPFLAGS) -std=c++11 $< -o $@
+	@g++ $(CPPFLAGS) -std=c++11 -MM $< -MF $*.d
+	@cp -f $*.d $*.d.tmp
+	@sed -e 's|.*:|$*.o:|' < $*.d.tmp > $*.d
+	@sed -e 's/.*://' -e 's/\\$$//' < $*.d.tmp | fmt -1 | \
+	  sed -e 's/^ *//' -e 's/$$/:/' >> $*.d
+	@rm -f $*.d.tmp
+
 %.o: %.cc
 	@echo " CPP" $@
 	@g++ -c $(CPPFLAGS) $< -o $@
@@ -59,4 +72,4 @@ clean:
 	@$(call remove_file,$(MODULENAME))
 
 distclean: clean
-	@true
+	@$(call remove_file, lxcmjson.cc)

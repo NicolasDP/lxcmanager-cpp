@@ -41,7 +41,7 @@ ifeq ($(CONFIG_DEBUG), y)
 endif
 
 all: $(BUILDDIR)/$(CONFIG_PROJECT_NAME)
-	$(V)$(MAKE) $(MAKEOPT) -C plugins $@
+	$(V)$(MAKE) $(MAKEOPT) -C plugins all
 
 %.o: %.cc
 	@echo " CPP" $@

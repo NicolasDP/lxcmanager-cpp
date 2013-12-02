@@ -6,12 +6,16 @@ PACKAGES_NEEDED =    \
     g++              \
     git subversion   \
     cmake            \
+    autoconf libtool \
     graphviz doxygen \
     gperf flex bison libbison-dev libncurses5-dev
 
 ##
 # END OF EDIT/CUSTOMISATION AREA
 ##
+
+SHELL = /bin/bash
+MAKE = make
 
 # To debug the build system: remove the following variables:
 V = @
