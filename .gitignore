@@ -20,3 +20,6 @@ repo/.repos_initialized
 repo/boost/
 repo/kconfig/
 repo/websocket/
+repo/libjson/
+
+*.swp
