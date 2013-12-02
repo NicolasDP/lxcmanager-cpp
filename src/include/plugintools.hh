@@ -19,6 +19,7 @@
 # include "logger.hh"
 
 class LXCMPlugin;
+class LXCMJsonVal;
 
 /*! @struct PluginsTools
  * @brief this structure will be given at the creation of each plugin in order
@@ -39,6 +40,8 @@ struct pluginTools
    * @param to is the destination
    * @param msg is the message */
   void (*send_message) (LXCMPlugin* from, char const* to, char const* msg);
+
+  LXCMJsonVal const* (*get_my_options) (LXCMModule const* module);
 }
 PluginTools;
 

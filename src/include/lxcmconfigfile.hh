@@ -44,16 +44,19 @@ class LXCMConfigFile : public LXCMCoreModule
       * @param os the output stream */
      void print (std::ostream& os) const;
 
+     static LXCMJsonVal const* getModuleOptions (LXCMModule const* module);
+
   private:
     /*! @brief Constructor */
     LXCMConfigFile ();
     /*!< @brief the unique instance of this Class */
-    static LXCMConfigFile* _singleton;
+    static LXCMConfigFile* _instance;
 
   private:
     LXCMJsonVal* _dom;
 };
 
+LXCMJsonVal const* lxcm_configfile_get_my_config (LXCMModule const* module);
 std::ostream& operator<< (std::ostream& os, LXCMConfigFile const& obj);
 
 #endif /* !LXCMConfigFile_HH_ */

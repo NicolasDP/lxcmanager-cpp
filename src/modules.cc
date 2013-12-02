@@ -17,6 +17,7 @@
 #include "config.hh"
 #include "plugintools.hh"
 #include "exceptions.hh"
+#include "lxcmconfigfile.hh"
 
 #include <dirent.h>
 #include <dlfcn.h>
@@ -75,6 +76,7 @@ static PluginTools const plugTools =
   /* defined in include/logger.hh */
   .log = log_message,
   .send_message = send_message,
+  .get_my_options = lxcm_configfile_get_my_config,
 };
 
 void LXCMPlugModules::exploreDir (std::string& dir)

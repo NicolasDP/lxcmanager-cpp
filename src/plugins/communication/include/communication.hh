@@ -16,16 +16,14 @@
 #ifndef COMMUNICATION_HH_
 # define COMMUNICATION_HH_
 
-# define PORT 9002
+# define COMMUNICATION_DEFAULT_PORT 9002
 
 # include <deque>
-//# include <iostream>
 
 # include <websocketpp/config/asio_no_tls.hpp>
 # include <websocketpp/server.hpp>
 
 # include "plugin.hh"
-# include "logger.hh"
 
 typedef
 websocketpp::server<websocketpp::config::asio> WSServer;
@@ -68,9 +66,9 @@ class LXCMPCommunication : public LXCMPlugin
 
   private:
     WSServer* _server;
-    std::string _moduleName;
 //    std::deque<LXCMPConnection> _connections;
     bool _lockMessage;
+    int _port;
 };
 
 #endif /* !COMMUNICATION_HH_ */

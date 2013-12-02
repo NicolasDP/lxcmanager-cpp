@@ -15,13 +15,14 @@
 
 #include "lxcmconfigfile.hh"
 #include "exceptions.hh"
+#include "logger.hh"
 #include "lxcmjsonparser.hh"
 #include <fstream>
 
-LXCMConfigFile* LXCMConfigFile::_singleton = NULL;
+LXCMConfigFile* LXCMConfigFile::_instance = NULL;
 
 LXCMConfigFile::LXCMConfigFile ()
-  : LXCMCoreModule ("LXCMConfigFile")
+  : LXCMCoreModule ("core::LXCMConfigFile")
   , _dom (NULL)
 {
   LXCMOptions* opts = LXCMOptions::getOptions ();
@@ -33,14 +34,14 @@ LXCMConfigFile::LXCMConfigFile ()
 
 LXCMConfigFile::~LXCMConfigFile ()
 {
-  LXCMConfigFile::_singleton = NULL;
+  LXCMConfigFile::_instance = NULL;
 }
 
 void LXCMConfigFile::init ()
 {
-  if (!LXCMConfigFile::_singleton)
+  if (!LXCMConfigFile::_instance)
   {
-    LXCMConfigFile::_singleton = new LXCMConfigFile ();
+    LXCMConfigFile::_instance = new LXCMConfigFile ();
   }
 }
 
@@ -76,8 +77,21 @@ void LXCMConfigFile::checkOptions (po::variables_map& vm)
   while (ifs.good ());
 
   this->_dom = tmp.getDom ();
+#if defined (CONFIG_DEBUG) && CONFIG_DEBUG
   this->print (std::cout);
+#endif
   ifs.close ();
+}
+
+LXCMJsonVal const* LXCMConfigFile::getModuleOptions (LXCMModule const* module)
+{
+  LXCMConfigFile const *instance = LXCMConfigFile::_instance;
+  if (instance->_dom)
+  {
+    return instance->_dom->getObject (module->moduleName ());
+  }
+
+  return NULL;
 }
 
 void LXCMConfigFile::print (std::ostream& os) const
@@ -86,6 +100,11 @@ void LXCMConfigFile::print (std::ostream& os) const
   {
     os << *this->_dom;
   }
+}
+
+LXCMJsonVal const* lxcm_configfile_get_my_config (LXCMModule const* module)
+{
+  return LXCMConfigFile::getModuleOptions (module);
 }
 
 std::ostream& operator<< (std::ostream& os, LXCMConfigFile const& obj)

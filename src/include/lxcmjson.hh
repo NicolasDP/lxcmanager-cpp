@@ -16,7 +16,6 @@
 #ifndef LXCMJSON_HH_
 # define LXCMJSON_HH_
 
-# include <cstdint>
 # include <map>
 # include <deque>
 # include <string>
@@ -33,6 +32,7 @@ class LXCMJsonVal
     ~LXCMJsonVal ();
 
     void print (unsigned int const indent, std::ostream& os) const;
+    LXCMJsonVal const* getObject (std::string const& key) const;
 
     int _type;
 

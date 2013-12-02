@@ -6,7 +6,8 @@ include $(SCRIPTSDIR)/Makefile.functions
 
 # Source files
 SOURCES = \
-    communication.cc
+    communication.cc \
+    $(SOURCEDIR)/lxcmjson.cc
 
 # DO NOT EDIT THE REMAINING FILE
 OBJS	= $(SOURCES:.cc=.o)

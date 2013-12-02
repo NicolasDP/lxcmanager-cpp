@@ -45,7 +45,7 @@ class LXCMModule
      * current module. Useful for debug and information logs.
      *
      * @return it returns the name of the module (_moduleName) */
-    virtual std::string& moduleName ()
+    virtual std::string const& moduleName () const
     {
       return this->_moduleName;
     }

@@ -176,6 +176,52 @@ void LXCMJsonVal::print (unsigned const int indent, std::ostream& os) const
   }
 }
 
+LXCMJsonVal const* LXCMJsonVal::getObject (std::string const& key) const
+{
+  LXCMJsonVal const* ret = NULL;
+  switch (this->_type)
+  {
+  case JSON_OBJECT_BEGIN:
+    {
+      std::map<std::string, LXCMJsonVal*>::const_iterator it;
+      std::map<std::string, LXCMJsonVal*>::const_iterator end;
+      end = this->_object.cend ();
+      for (it = this->_object.begin (); it != end && !ret; it++)
+      {
+        if (it->first.compare (key) == 0)
+        {
+          ret = it->second;
+	}
+        else
+        {
+          ret = it->second->getObject (key);
+        }
+      }
+    }
+    break;
+  case JSON_ARRAY_BEGIN:
+    {
+      std::deque<LXCMJsonVal*>::const_iterator it;
+      std::deque<LXCMJsonVal*>::const_iterator end;
+      end = this->_array.cend ();
+      for (it = this->_array.cbegin (); it != end && !ret; it++)
+      {
+        ret = (*it)->getObject (key);
+      }
+    }
+    break;
+  case JSON_FALSE:
+  case JSON_TRUE:
+  case JSON_NULL:
+  case JSON_INT:
+  case JSON_STRING:
+  case JSON_FLOAT:
+  default:
+    break;
+  }
+  return ret;
+}
+
 std::ostream& operator<< (std::ostream& os, LXCMJsonVal const& obj)
 {
   obj.print (0, os);

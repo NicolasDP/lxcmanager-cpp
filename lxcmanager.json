@@ -1,21 +1,13 @@
+/* This is the default LXCManager configuration file
+ *
+ * Update it carefully */
 {
-	"abc": {
-		"x": true,
-		"y": false
-	},
-	"key": [
-		1, 2, true, false, 4, 4.90241, {}, 22013, 14
-	],
-	"xxx": {
-		"y": { },
-		"z": { },
-		"abc": {},
-		"def": null
-	},
-	"qwr": [
-		48559,
-		{},
-		"abc",
-		true
-	]
-}	
+	/* plugin::Connection options:
+	 * Specify it there implies that:
+	 *  - this plugin is required
+	 *  - it will be loaded and initialized and stared
+	 *  - these options will be allowed to this plugin */
+	"plugin::Communication" : {
+		"port" : 4242
+	}
+}
