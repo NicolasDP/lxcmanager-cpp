@@ -40,7 +40,10 @@ ifeq ($(CONFIG_DEBUG), y)
   LDFLAGS  += -g -ggdb3
 endif
 
-all: $(BUILDDIR)/$(CONFIG_PROJECT_NAME)
+all: modules $(BUILDDIR)/$(CONFIG_PROJECT_NAME)
+
+.PHONY: modules
+modules:
 	$(V)$(MAKE) $(MAKEOPT) -C plugins all
 
 %.o: %.cc
